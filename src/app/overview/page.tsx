@@ -1,16 +1,52 @@
-import { IconTrendingUp } from "@tabler/icons-react"
+import { IconTrendingUp, IconPlayerPlay } from "@tabler/icons-react"
 import { Badge } from "@/components/ui/badge"
 import {
     Card,
     CardAction,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
     CardContent,
 } from "@/components/ui/card"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
+import { useState } from "react"
 
 export default function OverviewPage() {
+    const [selectedDidYouKnow, setSelectedDidYouKnow] = useState<number | null>(null)
+    const [selectedLearnNow, setSelectedLearnNow] = useState<number | null>(null)
+
+    const didYouKnowItems = [
+        {
+            title: "Doppler Imaging Technique",
+            shortDesc: "Learn about blood flow visualization",
+            fullDesc: "Doppler ultrasound is a special technique that evaluates blood flow through blood vessels. It uses sound waves to measure the speed and direction of blood cells as they move through arteries and veins.",
+        },
+        {
+            title: "3D Ultrasound Benefits",
+            shortDesc: "Advanced imaging capabilities",
+            fullDesc: "3D ultrasound technology provides detailed three-dimensional images of internal organs and structures, offering enhanced diagnostic capabilities compared to traditional 2D imaging.",
+        },
+    ]
+
+    const learnNowItems = [
+        {
+            title: "Cardiac Imaging Fundamentals",
+            shortDesc: "Master heart ultrasound basics",
+            fullDesc: "This comprehensive module covers the fundamental principles of cardiac ultrasound imaging, including chamber views, valve assessment, and basic measurements.",
+        },
+        {
+            title: "Musculoskeletal Scanning",
+            shortDesc: "Joint and soft tissue imaging",
+            fullDesc: "Learn advanced techniques for scanning joints, tendons, ligaments, and muscles. This module includes practical tips for common MSK conditions.",
+        },
+    ]
+
     return (
         <div className="flex flex-1 flex-col">
             <div className="@container/main flex flex-1 flex-col gap-2">
@@ -33,9 +69,14 @@ export default function OverviewPage() {
                                         </Badge>
                                     </CardAction>
                                 </CardHeader>
-                                <CardContent>
+                                <CardContent className="space-y-4">
+                                    {/* Video/Image Placeholder */}
+                                    <div className="relative aspect-video bg-muted rounded-lg flex items-center justify-center overflow-hidden">
+                                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
+                                        <IconPlayerPlay className="size-12 text-muted-foreground" />
+                                    </div>
                                     <p className="text-sm text-muted-foreground">
-                                        Explore this month's featured case study
+                                        Explore this month's featured case study showing a complex ACL tear pattern with associated meniscal injury.
                                     </p>
                                 </CardContent>
                             </Card>
@@ -60,7 +101,7 @@ export default function OverviewPage() {
                                 </CardContent>
                             </Card>
 
-                            {/* Row 2: Full-width card */}
+                            {/* Row 2: Did you know that? - Full-width card with clickable grid */}
                             <Card className="@container/card md:col-span-2">
                                 <CardHeader>
                                     <CardDescription>Did you know that?</CardDescription>
@@ -69,13 +110,28 @@ export default function OverviewPage() {
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <p className="text-sm text-muted-foreground">
-                                        Discover interesting facts and tips about ultrasound imaging techniques
-                                    </p>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {didYouKnowItems.map((item, index) => (
+                                            <div
+                                                key={index}
+                                                onClick={() => setSelectedDidYouKnow(index)}
+                                                className="border rounded-lg p-4 cursor-pointer hover:bg-accent/50 transition-colors space-y-3"
+                                            >
+                                                <div className="relative aspect-video bg-muted rounded-md flex items-center justify-center overflow-hidden">
+                                                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
+                                                    <IconPlayerPlay className="size-8 text-muted-foreground" />
+                                                </div>
+                                                <div>
+                                                    <p className="font-medium text-sm">{item.title}</p>
+                                                    <p className="text-xs text-muted-foreground mt-1">{item.shortDesc}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </CardContent>
                             </Card>
 
-                            {/* Row 3: Full-width card */}
+                            {/* Row 3: Learn now - Full-width card with clickable grid */}
                             <Card className="@container/card md:col-span-2">
                                 <CardHeader>
                                     <CardDescription>Learn now</CardDescription>
@@ -84,9 +140,24 @@ export default function OverviewPage() {
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <p className="text-sm text-muted-foreground">
-                                        Access educational resources and training materials
-                                    </p>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {learnNowItems.map((item, index) => (
+                                            <div
+                                                key={index}
+                                                onClick={() => setSelectedLearnNow(index)}
+                                                className="border rounded-lg p-4 cursor-pointer hover:bg-accent/50 transition-colors space-y-3"
+                                            >
+                                                <div className="relative aspect-video bg-muted rounded-md flex items-center justify-center overflow-hidden">
+                                                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
+                                                    <IconPlayerPlay className="size-8 text-muted-foreground" />
+                                                </div>
+                                                <div>
+                                                    <p className="font-medium text-sm">{item.title}</p>
+                                                    <p className="text-xs text-muted-foreground mt-1">{item.shortDesc}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </CardContent>
                             </Card>
                         </div>
@@ -119,6 +190,39 @@ export default function OverviewPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Did You Know That? Modal */}
+            <Dialog open={selectedDidYouKnow !== null} onOpenChange={() => setSelectedDidYouKnow(null)}>
+                <DialogContent className="max-w-3xl">
+                    <DialogHeader>
+                        <DialogTitle>{selectedDidYouKnow !== null && didYouKnowItems[selectedDidYouKnow].title}</DialogTitle>
+                        <DialogDescription>
+                            {selectedDidYouKnow !== null && didYouKnowItems[selectedDidYouKnow].fullDesc}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="relative aspect-video bg-muted rounded-lg flex items-center justify-center overflow-hidden mt-4">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
+                        <IconPlayerPlay className="size-16 text-muted-foreground" />
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* Learn Now Modal */}
+            <Dialog open={selectedLearnNow !== null} onOpenChange={() => setSelectedLearnNow(null)}>
+                <DialogContent className="max-w-3xl">
+                    <DialogHeader>
+                        <DialogTitle>{selectedLearnNow !== null && learnNowItems[selectedLearnNow].title}</DialogTitle>
+                        <DialogDescription>
+                            {selectedLearnNow !== null && learnNowItems[selectedLearnNow].fullDesc}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="relative aspect-video bg-muted rounded-lg flex items-center justify-center overflow-hidden mt-4">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
+                        <IconPlayerPlay className="size-16 text-muted-foreground" />
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
+
