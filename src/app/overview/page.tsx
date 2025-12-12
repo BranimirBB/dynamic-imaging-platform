@@ -32,6 +32,11 @@ export default function OverviewPage() {
             shortDesc: "Advanced imaging capabilities",
             fullDesc: "3D ultrasound technology provides detailed three-dimensional images of internal organs and structures, offering enhanced diagnostic capabilities compared to traditional 2D imaging.",
         },
+        {
+            title: "Contrast-Enhanced Ultrasound",
+            shortDesc: "Improved tissue characterization",
+            fullDesc: "Contrast-enhanced ultrasound uses microbubble contrast agents to improve visualization of blood flow and tissue perfusion, particularly useful in liver and cardiac imaging.",
+        },
     ]
 
     const learnNowItems = [
@@ -44,6 +49,11 @@ export default function OverviewPage() {
             title: "Musculoskeletal Scanning",
             shortDesc: "Joint and soft tissue imaging",
             fullDesc: "Learn advanced techniques for scanning joints, tendons, ligaments, and muscles. This module includes practical tips for common MSK conditions.",
+        },
+        {
+            title: "Obstetric Ultrasound",
+            shortDesc: "Prenatal imaging techniques",
+            fullDesc: "Master the essential skills for obstetric ultrasound including fetal biometry, anatomy survey, and assessment of fetal well-being throughout pregnancy.",
         },
     ]
 
@@ -65,7 +75,7 @@ export default function OverviewPage() {
                                     <CardAction>
                                         <Badge variant="outline">
                                             <IconTrendingUp />
-                                            See image
+                                            See trending cases
                                         </Badge>
                                     </CardAction>
                                 </CardHeader>
@@ -105,12 +115,9 @@ export default function OverviewPage() {
                             <Card className="@container/card md:col-span-2">
                                 <CardHeader>
                                     <CardDescription>Did you know that?</CardDescription>
-                                    <CardTitle className="text-2xl font-semibold">
-                                        Ultrasound Imaging Insights
-                                    </CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         {didYouKnowItems.map((item, index) => (
                                             <div
                                                 key={index}
@@ -135,12 +142,9 @@ export default function OverviewPage() {
                             <Card className="@container/card md:col-span-2">
                                 <CardHeader>
                                     <CardDescription>Learn now</CardDescription>
-                                    <CardTitle className="text-2xl font-semibold">
-                                        Advanced Training Modules
-                                    </CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         {learnNowItems.map((item, index) => (
                                             <div
                                                 key={index}
