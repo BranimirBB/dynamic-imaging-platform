@@ -108,8 +108,9 @@ import {
 
 export const schema = z.object({
     id: z.number(),
-    header: z.string(),
-    type: z.string(),
+    date: z.string(),
+    patientName: z.string(),
+    assessmentName: z.string(),
     status: z.string(),
     target: z.string(),
     limit: z.string(),
@@ -169,20 +170,29 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "header",
-        header: "Header",
+        accessorKey: "date",
+        header: "Date",
         cell: ({ row }) => {
             return <TableCellViewer item={row.original} />
         },
         enableHiding: false,
     },
     {
-        accessorKey: "type",
-        header: "Section Type",
+        accessorKey: "patientName",
+        header: "Patient Name",
         cell: ({ row }) => (
-            <div className="w-32">
+            <div className="font-medium">
+                {row.original.patientName}
+            </div>
+        ),
+    },
+    {
+        accessorKey: "assessmentName",
+        header: "Assessment Name",
+        cell: ({ row }) => (
+            <div className="w-48">
                 <Badge variant="outline" className="text-muted-foreground px-1.5">
-                    {row.original.type}
+                    {row.original.assessmentName}
                 </Badge>
             </div>
         ),
@@ -209,7 +219,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
                 onSubmit={(e) => {
                     e.preventDefault()
                     toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-                        loading: `Saving ${row.original.header}`,
+                        loading: `Saving ${row.original.patientName}`,
                         success: "Done",
                         error: "Error",
                     })
@@ -234,7 +244,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
                 onSubmit={(e) => {
                     e.preventDefault()
                     toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-                        loading: `Saving ${row.original.header}`,
+                        loading: `Saving ${row.original.patientName}`,
                         success: "Done",
                         error: "Error",
                     })
@@ -652,14 +662,14 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
         <Drawer direction={isMobile ? "bottom" : "right"}>
             <DrawerTrigger asChild>
                 <Button variant="link" className="text-foreground w-fit px-0 text-left">
-                    {item.header}
+                    {item.date}
                 </Button>
             </DrawerTrigger>
             <DrawerContent>
                 <DrawerHeader className="gap-1">
-                    <DrawerTitle>{item.header}</DrawerTitle>
+                    <DrawerTitle>{item.patientName} - {item.assessmentName}</DrawerTitle>
                     <DrawerDescription>
-                        Showing total visitors for the last 6 months
+                        Showing activity details for this assessment
                     </DrawerDescription>
                 </DrawerHeader>
                 <div className="flex flex-col gap-4 overflow-y-auto px-4 text-sm">
@@ -721,34 +731,35 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
                         </>
                     )}
                     <form className="flex flex-col gap-4">
-                        <div className="flex flex-col gap-3">
-                            <Label htmlFor="header">Header</Label>
-                            <Input id="header" defaultValue={item.header} />
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="flex flex-col gap-3">
+                                <Label htmlFor="date">Date</Label>
+                                <Input id="date" defaultValue={item.date} />
+                            </div>
+                            <div className="flex flex-col gap-3">
+                                <Label htmlFor="patientName">Patient Name</Label>
+                                <Input id="patientName" defaultValue={item.patientName} />
+                            </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div className="flex flex-col gap-3">
-                                <Label htmlFor="type">Type</Label>
-                                <Select defaultValue={item.type}>
-                                    <SelectTrigger id="type" className="w-full">
-                                        <SelectValue placeholder="Select a type" />
+                                <Label htmlFor="assessmentName">Assessment</Label>
+                                <Select defaultValue={item.assessmentName}>
+                                    <SelectTrigger id="assessmentName" className="w-full">
+                                        <SelectValue placeholder="Select an assessment" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="Table of Contents">
-                                            Table of Contents
+                                        <SelectItem value="Abdominal Ultrasound">
+                                            Abdominal Ultrasound
                                         </SelectItem>
-                                        <SelectItem value="Executive Summary">
-                                            Executive Summary
+                                        <SelectItem value="Echocardiogram">
+                                            Echocardiogram
                                         </SelectItem>
-                                        <SelectItem value="Technical Approach">
-                                            Technical Approach
+                                        <SelectItem value="Thyroid Scan">
+                                            Thyroid Scan
                                         </SelectItem>
-                                        <SelectItem value="Design">Design</SelectItem>
-                                        <SelectItem value="Capabilities">Capabilities</SelectItem>
-                                        <SelectItem value="Focus Documents">
-                                            Focus Documents
-                                        </SelectItem>
-                                        <SelectItem value="Narrative">Narrative</SelectItem>
-                                        <SelectItem value="Cover Page">Cover Page</SelectItem>
+                                        <SelectItem value="Pelvic Ultrasound">Pelvic Ultrasound</SelectItem>
+                                        <SelectItem value="Carotid Doppler">Carotid Doppler</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
