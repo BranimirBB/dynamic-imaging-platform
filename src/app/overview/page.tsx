@@ -2,7 +2,6 @@ import { IconTrendingUp, IconPlayerPlay } from "@tabler/icons-react"
 import { Badge } from "@/components/ui/badge"
 import {
     Card,
-    CardAction,
     CardDescription,
     CardHeader,
     CardTitle,
@@ -17,11 +16,55 @@ import {
 } from "@/components/ui/dialog"
 import { useState } from "react"
 
+const newsItems = [
+    {
+        title: "Platform Update v2.1",
+        desc: "New features released",
+        fullDesc: "We are excited to announce Platform Update v2.1, bringing new features and improvements to enhance your ultrasound workflow and ProbeFix Dynamic integration.",
+    },
+    {
+        title: "Community Event",
+        desc: "Join our webinar next week",
+        fullDesc: "Don't miss our upcoming community webinar where we discuss best practices for ultrasound monitoring and showcase ProbeFix Dynamic in action.",
+    },
+    {
+        title: "Research Publication",
+        desc: "New study on imaging accuracy",
+        fullDesc: "A new research publication highlights the improved imaging accuracy achieved with ProbeFix Dynamic during continuous muscle monitoring.",
+    },
+    {
+        title: "ProbeFix Dynamic: Now CE Certified",
+        desc: "ProbeFix Dynamic receives CE mark for clinical use in Europe.",
+        fullDesc: "ProbeFix Dynamic is now CE certified, ensuring compliance and safety for clinical use across Europe. This marks a significant milestone for our product.",
+    },
+    {
+        title: "New Clinical Study: Real-Time Muscle Monitoring",
+        desc: "ProbeFix Dynamic enables continuous ultrasound during rehabilitation exercises.",
+        fullDesc: "A recent clinical study demonstrates how ProbeFix Dynamic enables real-time, continuous ultrasound monitoring during rehabilitation, improving patient outcomes.",
+    },
+    {
+        title: "Feature Release: Automated Probe Position Tracking",
+        desc: "Track probe position and movement with our latest software update.",
+        fullDesc: "Our latest software update introduces automated probe position tracking, making it easier to document and analyze probe movement during evaluations.",
+    },
+    {
+        title: "Case Report: Monitoring Recovery in Elite Athletes",
+        desc: "ProbeFix Dynamic used for longitudinal muscle assessment in professional sports.",
+        fullDesc: "Elite athletes are now using ProbeFix Dynamic for longitudinal muscle assessment, enabling precise monitoring of recovery and performance.",
+    },
+    {
+        title: "Upcoming Workshop: Hands-On with ProbeFix Dynamic",
+        desc: "Register for our live demonstration and training session.",
+        fullDesc: "Sign up for our hands-on workshop to experience ProbeFix Dynamic and learn advanced ultrasound monitoring techniques from our experts.",
+    },
+];
+
 export default function OverviewPage() {
     const [selectedDidYouKnow, setSelectedDidYouKnow] = useState<number | null>(null)
     const [selectedLearnNow, setSelectedLearnNow] = useState<number | null>(null)
     const [isCaseModalOpen, setIsCaseModalOpen] = useState(false)
     const [isVideoModalOpen, setIsVideoModalOpen] = useState(false)
+    const [selectedNews, setSelectedNews] = useState<number | null>(null);
 
     const didYouKnowItems = [
         {
@@ -64,6 +107,43 @@ export default function OverviewPage() {
 
     return (
         <div className="flex flex-1 flex-col">
+            <style>{`
+                .custom-card-outline {
+                    border: 1.5px solid #61C3C0 !important;
+                    box-shadow: 0 2px 8px 0 #61C3C033 !important;
+                }
+                .news-separator {
+                    border-bottom: 1.5px solid #61C3C0 !important;
+                }
+                .news-hover {
+                    transition: box-shadow 0.2s, background 0.2s;
+                }
+                .news-hover:hover {
+                    background: #e6f8f8 !important;
+                    box-shadow: 0 2px 12px 0 #61C3C055 !important;
+                }
+                .card-hover-special {
+                    transition: box-shadow 0.2s, background 0.2s;
+                }
+                .card-hover-special:hover {
+                    box-shadow: 0 4px 24px 0 #F0FCFB !important;
+                }
+                .bg-assessments {
+                    background: #F0FCFB !important;
+                }
+                .assessment-inner-card {
+                    background: #fff !important;
+                }
+                .bg-assessments-header {
+                    background: #F0FCFB !important;
+                }
+                .cardcontent-custom-radius {
+                    border-bottom-left-radius: 10px !important;
+                    border-bottom-right-radius: 10px !important;
+                    border-top-left-radius: 10px !important;
+                    border-top-right-radius: 10px !important;
+                }
+            `}</style>
             <div className="@container/main flex flex-1 flex-col gap-2">
                 <div className="flex flex-col gap-4 py-4 px-4 md:gap-6 md:py-6 lg:px-6">
                     {/* Main 4-column grid */}
@@ -72,7 +152,7 @@ export default function OverviewPage() {
                         <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                             {/* Row 1: Two cards side by side */}
                             <div onClick={() => setIsCaseModalOpen(true)} className="cursor-pointer transition-transform hover:scale-[1.01]">
-                                <Card className="@container/card h-full hover:bg-accent/50 transition-colors">
+                                <Card className="@container/card custom-card-outline card-hover-special h-full hover:bg-accent/50 transition-colors">
                                     <CardHeader>
                                         <div className="flex items-center justify-between">
                                             <CardDescription>Case of the month</CardDescription>
@@ -102,11 +182,11 @@ export default function OverviewPage() {
                             </div>
 
                             <div onClick={() => setIsVideoModalOpen(true)} className="cursor-pointer transition-transform hover:scale-[1.01]">
-                                <Card className="@container/card h-full hover:bg-accent/50 transition-colors">
+                                <Card className="@container/card custom-card-outline card-hover-special h-full hover:bg-accent/50 transition-colors">
                                     <CardHeader>
                                         <CardDescription>Did you know that</CardDescription>
-                                        <CardTitle className="text-xl font-semibold">
-                                            Quadriceps; Step Up with Usono ProbeFix Dynamic
+                                        <CardTitle className="text-2xl font-semibold">
+                                            ProbeFix Dynamic for quadriceps testing
                                         </CardTitle>
                                     </CardHeader>
                                     <CardContent className="space-y-4">
@@ -132,17 +212,17 @@ export default function OverviewPage() {
                             </div>
 
                             {/* Row 2: My latest assessments - Full-width card with clickable grid */}
-                            <Card className="@container/card md:col-span-2">
-                                <CardHeader>
-                                    <CardDescription>My latest assessments</CardDescription>
+                            <Card className="@container/card custom-card-outline md:col-span-2">
+                                <CardHeader className="bg-assessments-header rounded-t-lg cardcontent-custom-radius">
+                                    <CardTitle className="text-2xl font-semibold">My latest assessments</CardTitle>
                                 </CardHeader>
-                                <CardContent>
+                                <CardContent className="bg-assessments cardcontent-custom-radius">
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         {didYouKnowItems.map((item, index) => (
                                             <div
                                                 key={index}
                                                 onClick={() => setSelectedDidYouKnow(index)}
-                                                className="border rounded-lg p-4 cursor-pointer hover:bg-accent/50 transition-colors space-y-3"
+                                                className="assessment-inner-card border rounded-lg p-4 cursor-pointer hover:bg-accent/50 transition-colors space-y-3"
                                             >
                                                 <div className="relative aspect-video bg-muted rounded-md flex items-center justify-center overflow-hidden">
                                                     {/* @ts-ignore */}
@@ -171,7 +251,7 @@ export default function OverviewPage() {
                             </Card>
 
                             {/* Row 3: Learn now - Full-width card with clickable grid */}
-                            <Card className="@container/card md:col-span-2">
+                            <Card className="@container/card custom-card-outline md:col-span-2">
                                 <CardHeader>
                                     <CardDescription>Learn now</CardDescription>
                                 </CardHeader>
@@ -199,7 +279,7 @@ export default function OverviewPage() {
                         </div>
 
                         {/* Right Area - 1 column wide, full height */}
-                        <Card className="@container/card lg:row-span-4">
+                        <Card className="@container/card custom-card-outline lg:row-span-4">
                             <CardHeader>
                                 <CardDescription>News</CardDescription>
                                 <CardTitle className="text-2xl font-semibold">
@@ -208,18 +288,16 @@ export default function OverviewPage() {
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-4">
-                                    <div className="border-b pb-3">
-                                        <p className="font-medium text-sm">Platform Update v2.1</p>
-                                        <p className="text-xs text-muted-foreground mt-1">New features released</p>
-                                    </div>
-                                    <div className="border-b pb-3">
-                                        <p className="font-medium text-sm">Community Event</p>
-                                        <p className="text-xs text-muted-foreground mt-1">Join our webinar next week</p>
-                                    </div>
-                                    <div className="pb-3">
-                                        <p className="font-medium text-sm">Research Publication</p>
-                                        <p className="text-xs text-muted-foreground mt-1">New study on imaging accuracy</p>
-                                    </div>
+                                    {newsItems.map((item, idx) => (
+                                        <div
+                                            key={idx}
+                                            className={`pb-3 ${idx < newsItems.length - 1 ? 'news-separator' : ''} news-hover cursor-pointer rounded`}
+                                            onClick={() => setSelectedNews(idx)}
+                                        >
+                                            <p className="font-medium text-sm">{item.title}</p>
+                                            <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
+                                        </div>
+                                    ))}
                                 </div>
                             </CardContent>
                         </Card>
@@ -328,6 +406,23 @@ export default function OverviewPage() {
                     <div className="relative aspect-video bg-muted rounded-lg flex items-center justify-center overflow-hidden mt-4">
                         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
                         <IconPlayerPlay className="size-16 text-muted-foreground" />
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* News Modal */}
+            <Dialog open={selectedNews !== null} onOpenChange={() => setSelectedNews(null)}>
+                <DialogContent className="max-w-3xl">
+                    <DialogHeader>
+                        <DialogTitle>{selectedNews !== null && newsItems[selectedNews].title}</DialogTitle>
+                        <DialogDescription>
+                            {selectedNews !== null && newsItems[selectedNews].desc}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        <p className="text-sm text-muted-foreground">
+                            {selectedNews !== null && newsItems[selectedNews].fullDesc}
+                        </p>
                     </div>
                 </DialogContent>
             </Dialog>
