@@ -109,33 +109,39 @@ export default function OverviewPage() {
         <div className="flex flex-1 flex-col">
             <style>{`
                 .custom-card-outline {
-                    border: 1.5px solid #61C3C0 !important;
-                    box-shadow: 0 2px 8px 0 #61C3C033 !important;
+                    border: 1.5px solid #6188C3 !important;
+                    box-shadow: 0 2px 8px 0 #6188C333 !important;
+                }
+                .assessment-inner-card {
+                    background: #fff !important;
+                    border: 0.9px solid #6188C3 !important;
+                    transition: box-shadow 0.2s, background 0.2s;
+                }
+                .assessment-inner-card:hover {
+                    box-shadow: 0 0 8px 2px #6188C355 !important;
+                    background: #F8FCFF !important;
                 }
                 .news-separator {
-                    border-bottom: 1.5px solid #61C3C0 !important;
+                    border-bottom: 1.5px solid #6188C3 !important;
                 }
                 .news-hover {
                     transition: box-shadow 0.2s, background 0.2s;
                 }
                 .news-hover:hover {
-                    background: #e6f8f8 !important;
-                    box-shadow: 0 2px 12px 0 #61C3C055 !important;
+                    background: #EFF7FF !important;
+                    box-shadow: 0 2px 12px 0 #6188C355 !important;
                 }
                 .card-hover-special {
                     transition: box-shadow 0.2s, background 0.2s;
                 }
                 .card-hover-special:hover {
-                    box-shadow: 0 4px 24px 0 #F0FCFB !important;
+                    box-shadow: 0 4px 24px 0 #EFF7FF !important;
                 }
                 .bg-assessments {
-                    background: #F0FCFB !important;
-                }
-                .assessment-inner-card {
-                    background: #fff !important;
+                    background: #EFF7FF !important;
                 }
                 .bg-assessments-header {
-                    background: #F0FCFB !important;
+                    background: #EFF7FF !important;
                 }
                 .cardcontent-custom-radius {
                     border-bottom-left-radius: 10px !important;
@@ -150,7 +156,46 @@ export default function OverviewPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6">
                         {/* Left Area - 3 columns wide */}
                         <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                            {/* Row 1: Two cards side by side */}
+                            {/* Row 1: My latest assessments - Full-width card with clickable grid */}
+                            <Card className="@container/card custom-card-outline md:col-span-2">
+                                <CardHeader className="bg-assessments-header rounded-t-lg cardcontent-custom-radius">
+                                    <CardTitle className="text-2xl font-semibold" style={{ color: '#2D4F83' }}>My latest assessments</CardTitle>
+                                </CardHeader>
+                                <CardContent className="bg-assessments cardcontent-custom-radius">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        {didYouKnowItems.map((item, index) => (
+                                            <div
+                                                key={index}
+                                                onClick={() => setSelectedDidYouKnow(index)}
+                                                className="assessment-inner-card border rounded-lg p-4 cursor-pointer hover:bg-accent/50 transition-colors space-y-3"
+                                            >
+                                                <div className="relative aspect-video bg-muted rounded-md flex items-center justify-center overflow-hidden">
+                                                    {/* @ts-ignore */}
+                                                    {item.image ? (
+                                                        <img 
+                                                            /* @ts-ignore */
+                                                            src={item.image} 
+                                                            alt={item.title}
+                                                            className="absolute inset-0 h-full w-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <>
+                                                            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
+                                                            <IconPlayerPlay className="size-8 text-muted-foreground" />
+                                                        </>
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    <p className="font-medium text-sm">{item.title}</p>
+                                                    <p className="text-xs text-muted-foreground mt-1">{item.shortDesc}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            {/* Row 2: Two cards side by side */}
                             <div onClick={() => setIsCaseModalOpen(true)} className="cursor-pointer transition-transform hover:scale-[1.01]">
                                 <Card className="@container/card custom-card-outline card-hover-special h-full hover:bg-accent/50 transition-colors">
                                     <CardHeader>
@@ -210,45 +255,6 @@ export default function OverviewPage() {
                                     </CardContent>
                                 </Card>
                             </div>
-
-                            {/* Row 2: My latest assessments - Full-width card with clickable grid */}
-                            <Card className="@container/card custom-card-outline md:col-span-2">
-                                <CardHeader className="bg-assessments-header rounded-t-lg cardcontent-custom-radius">
-                                    <CardTitle className="text-2xl font-semibold">My latest assessments</CardTitle>
-                                </CardHeader>
-                                <CardContent className="bg-assessments cardcontent-custom-radius">
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        {didYouKnowItems.map((item, index) => (
-                                            <div
-                                                key={index}
-                                                onClick={() => setSelectedDidYouKnow(index)}
-                                                className="assessment-inner-card border rounded-lg p-4 cursor-pointer hover:bg-accent/50 transition-colors space-y-3"
-                                            >
-                                                <div className="relative aspect-video bg-muted rounded-md flex items-center justify-center overflow-hidden">
-                                                    {/* @ts-ignore */}
-                                                    {item.image ? (
-                                                        <img 
-                                                            /* @ts-ignore */
-                                                            src={item.image} 
-                                                            alt={item.title}
-                                                            className="absolute inset-0 h-full w-full object-cover"
-                                                        />
-                                                    ) : (
-                                                        <>
-                                                            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
-                                                            <IconPlayerPlay className="size-8 text-muted-foreground" />
-                                                        </>
-                                                    )}
-                                                </div>
-                                                <div>
-                                                    <p className="font-medium text-sm">{item.title}</p>
-                                                    <p className="text-xs text-muted-foreground mt-1">{item.shortDesc}</p>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </CardContent>
-                            </Card>
 
                             {/* Row 3: Learn now - Full-width card with clickable grid */}
                             <Card className="@container/card custom-card-outline md:col-span-2">
