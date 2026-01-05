@@ -20,6 +20,7 @@ import { useState } from "react"
 export default function OverviewPage() {
     const [selectedDidYouKnow, setSelectedDidYouKnow] = useState<number | null>(null)
     const [selectedLearnNow, setSelectedLearnNow] = useState<number | null>(null)
+    const [isCaseModalOpen, setIsCaseModalOpen] = useState(false)
 
     const didYouKnowItems = [
         {
@@ -66,44 +67,49 @@ export default function OverviewPage() {
                         {/* Left Area - 3 columns wide */}
                         <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                             {/* Row 1: Two cards side by side */}
-                            <Card className="@container/card">
-                                <CardHeader>
-                                    <CardDescription>Case of the month</CardDescription>
-                                    <CardTitle className="text-2xl font-semibold">
-                                        Rare ACL Tear
-                                    </CardTitle>
-                                    <CardAction>
-                                        <Badge variant="outline">
-                                            <IconTrendingUp />
-                                            See trending cases
-                                        </Badge>
-                                    </CardAction>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                    {/* Video/Image Placeholder */}
-                                    <div className="relative aspect-video bg-muted rounded-lg flex items-center justify-center overflow-hidden">
-                                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
-                                        <IconPlayerPlay className="size-12 text-muted-foreground" />
-                                    </div>
-                                    <p className="text-sm text-muted-foreground">
-                                        Explore this month's featured case study showing a complex ACL tear pattern with associated meniscal injury.
-                                    </p>
-                                </CardContent>
-                            </Card>
+                            <div onClick={() => setIsCaseModalOpen(true)} className="cursor-pointer transition-transform hover:scale-[1.01]">
+                                <Card className="@container/card h-full hover:bg-accent/50 transition-colors">
+                                    <CardHeader>
+                                        <div className="flex items-center justify-between">
+                                            <CardDescription>Case of the month</CardDescription>
+                                            <Badge variant="outline">
+                                                <IconTrendingUp />
+                                                See trending cases
+                                            </Badge>
+                                        </div>
+                                        <CardTitle className="text-2xl font-semibold">
+                                            Muscle Fascicle Behaviour
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="space-y-4">
+                                        {/* Image */}
+                                        <div className="relative aspect-video bg-muted rounded-lg flex items-center justify-center overflow-hidden">
+                                            <img
+                                                src="/src/assets/CaseOfTheMonth.png"
+                                                alt="Case of the Month"
+                                                className="absolute inset-0 h-full w-full object-cover"
+                                            />
+                                        </div>
+                                        <p className="text-sm text-muted-foreground line-clamp-2">
+                                            In November researchers successfully used our products in a study on muscle fascicle behaviour during simulated lunar gravity, part of the 88th ESA Parabolic Flight Campaign
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            </div>
 
                             <Card className="@container/card">
-                                <CardHeader>
-                                    <CardDescription>Pending requests for collaboration</CardDescription>
-                                    <CardTitle className="text-2xl font-semibold tabular-nums">
-                                        12
-                                    </CardTitle>
-                                    <CardAction>
-                                        <Badge variant="outline">
-                                            <IconTrendingUp />
-                                            +3
-                                        </Badge>
-                                    </CardAction>
-                                </CardHeader>
+                                    <CardHeader>
+                                        <div className="flex items-center justify-between">
+                                            <CardDescription>Pending requests for collaboration</CardDescription>
+                                            <Badge variant="outline">
+                                                <IconTrendingUp />
+                                                +3
+                                            </Badge>
+                                        </div>
+                                        <CardTitle className="text-2xl font-semibold tabular-nums">
+                                            12
+                                        </CardTitle>
+                                    </CardHeader>
                                 <CardContent>
                                     <p className="text-sm text-muted-foreground">
                                         Review and respond to collaboration requests
@@ -194,6 +200,40 @@ export default function OverviewPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Case of the Month Modal */}
+            <Dialog open={isCaseModalOpen} onOpenChange={setIsCaseModalOpen}>
+                <DialogContent className="max-w-3xl">
+                    <DialogHeader>
+                        <DialogTitle>Muscle Fascicle Behaviour</DialogTitle>
+                        <DialogDescription>
+                            Case of the Month - November Study
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        <div className="relative aspect-video bg-muted rounded-lg flex items-center justify-center overflow-hidden mt-2">
+                            <img
+                                src="/src/assets/CaseOfTheMonth.png"
+                                alt="Case of the Month"
+                                className="absolute inset-0 h-full w-full object-cover"
+                            />
+                        </div>
+<p className="text-sm text-muted-foreground">
+  In November researchers successfully used our products in a study on muscle
+  fascicle behaviour during simulated lunar gravity, part of the 88th ESA
+  Parabolic Flight Campaign.<br /><br />
+
+  ProbeFix Dynamic was incredibly helpful for our Moonwalk research project and
+  made the setup of the ultrasound probe during the parabolic flights both quick
+  and effortless. We truly appreciated how reliable and easy to use it was.<br /><br />
+
+  📹 Want to see the action? See the videos from ESA Television:<br />
+  <a href="https://lnkd.in/ezEgrfag">https://lnkd.in/ezEgrfag</a><br />
+  <a href="https://lnkd.in/eyNWVT2f">https://lnkd.in/eyNWVT2f</a>
+</p>
+                    </div>
+                </DialogContent>
+            </Dialog>
 
             {/* Did You Know That? Modal */}
             <Dialog open={selectedDidYouKnow !== null} onOpenChange={() => setSelectedDidYouKnow(null)}>

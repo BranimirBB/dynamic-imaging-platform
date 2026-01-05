@@ -106,6 +106,11 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 
+/**
+ * 1. THE SCHEMA
+ * We use Zod to define the data structure. This ensures that every row 
+ * in our table has exactly the fields we expect (Date, Name, Assessment, etc.)
+ */
 export const schema = z.object({
     id: z.number(),
     date: z.string(),
@@ -137,7 +142,13 @@ function DragHandle({ id }: { id: number }) {
     )
 }
 
+/**
+ * 2. COLUMN DEFINITIONS
+ * This is the 'Map' of the table. Each object in this array defines 
+ * what one column should look like and where it gets its data.
+ */
 const columns: ColumnDef<z.infer<typeof schema>>[] = [
+    // Column for the Drag handle (vertical dots)
     {
         id: "drag",
         header: () => null,
@@ -169,6 +180,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         enableSorting: false,
         enableHiding: false,
     },
+    // The Date column, which also acts as a button to open the Detail Drawer
     {
         accessorKey: "date",
         header: "Date",
@@ -177,6 +189,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         },
         enableHiding: false,
     },
+    // Simple data column for Patient Name
     {
         accessorKey: "patientName",
         header: "Patient Name",
@@ -186,6 +199,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
             </div>
         ),
     },
+    // Assessment column using a Badge for better styling
     {
         accessorKey: "assessmentName",
         header: "Assessment Name",
@@ -655,6 +669,11 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
+/**
+ * 3. THE DETAIL DRAWER
+ * This component handles what happens when you click a Date.
+ * It opens a sidebar (Drawer) showing the full details of that patient's assessment.
+ */
 function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
     const isMobile = useIsMobile()
 
