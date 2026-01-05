@@ -21,22 +21,26 @@ export default function OverviewPage() {
     const [selectedDidYouKnow, setSelectedDidYouKnow] = useState<number | null>(null)
     const [selectedLearnNow, setSelectedLearnNow] = useState<number | null>(null)
     const [isCaseModalOpen, setIsCaseModalOpen] = useState(false)
+    const [isVideoModalOpen, setIsVideoModalOpen] = useState(false)
 
     const didYouKnowItems = [
         {
-            title: "Doppler Imaging Technique",
-            shortDesc: "Learn about blood flow visualization",
-            fullDesc: "Doppler ultrasound is a special technique that evaluates blood flow through blood vessels. It uses sound waves to measure the speed and direction of blood cells as they move through arteries and veins.",
+            title: "Ronaldo / Biceps Femoris injury / Week3",
+            shortDesc: "26.12.2025",
+            fullDesc: "Ultrasound shows clear signs of healing in the Biceps Femoris, with improved fiber alignment and reduced hypoechoic area. Mild edema remains, but recovery is progressing well and rehabilitation can continue",
+            image: "/src/assets/LastAssessment1.png"
         },
         {
-            title: "3D Ultrasound Benefits",
-            shortDesc: "Advanced imaging capabilities",
-            fullDesc: "3D ultrasound technology provides detailed three-dimensional images of internal organs and structures, offering enhanced diagnostic capabilities compared to traditional 2D imaging.",
+            title: "Marcelo / Adductor injury / Week1",
+            shortDesc: "03.01.2026",
+            fullDesc: "Ultrasound reveals an acute adductor strain with a visible hypoechoic area and mild fiber disruption. Localized edema is present, indicating early-stage injury, and rehabilitation should begin with cautious, low-load treatment.",
+            image: "/src/assets/LastAssessment2.png"
         },
         {
-            title: "Contrast-Enhanced Ultrasound",
-            shortDesc: "Improved tissue characterization",
-            fullDesc: "Contrast-enhanced ultrasound uses microbubble contrast agents to improve visualization of blood flow and tissue perfusion, particularly useful in liver and cardiac imaging.",
+            title: "Sergio Ramos / Calves injury / Week7",
+            shortDesc: "05.01.2026",
+            fullDesc: "Ultrasound shows advanced tissue remodeling in the calf with well-aligned fibers and minimal residual edema. The injury is nearing full recovery, and the muscle appears stable for progressive return to higher-intensity loading.",
+            image: "/src/assets/LastAssessment3.png"
         },
     ]
 
@@ -97,30 +101,40 @@ export default function OverviewPage() {
                                 </Card>
                             </div>
 
-                            <Card className="@container/card">
+                            <div onClick={() => setIsVideoModalOpen(true)} className="cursor-pointer transition-transform hover:scale-[1.01]">
+                                <Card className="@container/card h-full hover:bg-accent/50 transition-colors">
                                     <CardHeader>
-                                        <div className="flex items-center justify-between">
-                                            <CardDescription>Pending requests for collaboration</CardDescription>
-                                            <Badge variant="outline">
-                                                <IconTrendingUp />
-                                                +3
-                                            </Badge>
-                                        </div>
-                                        <CardTitle className="text-2xl font-semibold tabular-nums">
-                                            12
+                                        <CardDescription>Did you know that</CardDescription>
+                                        <CardTitle className="text-xl font-semibold">
+                                            Quadriceps; Step Up with Usono ProbeFix Dynamic
                                         </CardTitle>
                                     </CardHeader>
-                                <CardContent>
-                                    <p className="text-sm text-muted-foreground">
-                                        Review and respond to collaboration requests
-                                    </p>
-                                </CardContent>
-                            </Card>
+                                    <CardContent className="space-y-4">
+                                        <div className="relative aspect-video bg-muted rounded-lg flex items-center justify-center overflow-hidden">
+                                            <video 
+                                                src="/src/assets/VideoUsono.mov"
+                                                className="absolute inset-0 h-full w-full object-cover opacity-80"
+                                                muted
+                                                playsInline
+                                            />
+                                            <div className="absolute inset-0 bg-black/20" />
+                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                <div className="bg-background/80 rounded-full p-3 backdrop-blur-sm">
+                                                    <IconPlayerPlay className="size-8 text-foreground fill-foreground" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p className="text-sm text-muted-foreground line-clamp-2">
+                                            The fixation enables reliable probe positioning throughout motion, making it easier to observe muscle activation and tissue behavior during functional loading.
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            </div>
 
-                            {/* Row 2: Did you know that? - Full-width card with clickable grid */}
+                            {/* Row 2: My latest assessments - Full-width card with clickable grid */}
                             <Card className="@container/card md:col-span-2">
                                 <CardHeader>
-                                    <CardDescription>Did you know that?</CardDescription>
+                                    <CardDescription>My latest assessments</CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -131,8 +145,20 @@ export default function OverviewPage() {
                                                 className="border rounded-lg p-4 cursor-pointer hover:bg-accent/50 transition-colors space-y-3"
                                             >
                                                 <div className="relative aspect-video bg-muted rounded-md flex items-center justify-center overflow-hidden">
-                                                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
-                                                    <IconPlayerPlay className="size-8 text-muted-foreground" />
+                                                    {/* @ts-ignore */}
+                                                    {item.image ? (
+                                                        <img 
+                                                            /* @ts-ignore */
+                                                            src={item.image} 
+                                                            alt={item.title}
+                                                            className="absolute inset-0 h-full w-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <>
+                                                            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
+                                                            <IconPlayerPlay className="size-8 text-muted-foreground" />
+                                                        </>
+                                                    )}
                                                 </div>
                                                 <div>
                                                     <p className="font-medium text-sm">{item.title}</p>
@@ -235,6 +261,31 @@ export default function OverviewPage() {
                 </DialogContent>
             </Dialog>
 
+            {/* Video Modal */}
+            <Dialog open={isVideoModalOpen} onOpenChange={setIsVideoModalOpen}>
+                <DialogContent className="max-w-3xl">
+                    <DialogHeader>
+                        <DialogTitle>Quadriceps; Step Up with Usono ProbeFix Dynamic</DialogTitle>
+                        <DialogDescription>
+                            Did you know that?
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        <div className="relative aspect-video bg-muted rounded-lg flex items-center justify-center overflow-hidden mt-2 bg-black">
+                            <video
+                                src="/src/assets/VideoUsono.mov"
+                                className="h-full w-full object-contain"
+                                controls
+                                autoPlay
+                            />
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                            The fixation enables reliable probe positioning throughout motion, making it easier to observe muscle activation and tissue behavior during functional loading.
+                        </p>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
             {/* Did You Know That? Modal */}
             <Dialog open={selectedDidYouKnow !== null} onOpenChange={() => setSelectedDidYouKnow(null)}>
                 <DialogContent className="max-w-3xl">
@@ -245,8 +296,22 @@ export default function OverviewPage() {
                         </DialogDescription>
                     </DialogHeader>
                     <div className="relative aspect-video bg-muted rounded-lg flex items-center justify-center overflow-hidden mt-4">
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
-                        <IconPlayerPlay className="size-16 text-muted-foreground" />
+                        {selectedDidYouKnow !== null && (
+                            // @ts-ignore
+                            didYouKnowItems[selectedDidYouKnow].image ? (
+                                <img 
+                                    // @ts-ignore
+                                    src={didYouKnowItems[selectedDidYouKnow].image} 
+                                    alt={didYouKnowItems[selectedDidYouKnow].title}
+                                    className="absolute inset-0 h-full w-full object-cover"
+                                />
+                            ) : (
+                                <>
+                                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
+                                    <IconPlayerPlay className="size-16 text-muted-foreground" />
+                                </>
+                            )
+                        )}
                     </div>
                 </DialogContent>
             </Dialog>
