@@ -115,7 +115,8 @@ export const schema = z.object({
     patientName: z.string(),
     assessmentName: z.string(),
     status: z.string(),
-    reviewer: z.string(), // Will be used as Physiotherapist
+    teamDoctor: z.string(), // RESTORED
+    reviewer: z.string(),
 })
 
 // Create a separate component for the drag handle
@@ -186,16 +187,27 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         header: "Status",
         cell: ({ row }) => (
             <Badge variant="outline" className="text-muted-foreground px-1.5">
-                {row.original.status === "Done" ? (
-                    <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
+                {row.original.status === "Done" || row.original.status === "Training" ? (
+                    <>
+                        <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400 mr-1" />
+                        Training
+                    </>
+                ) : row.original.status === "In Progress" ? (
+                    <>
+                        <IconLoader className="text-muted-foreground mr-1" />
+                        In Progress
+                    </>
                 ) : (
-                    <IconLoader />
+                    <>{row.original.status}</>
                 )}
-                {row.original.status}
             </Badge>
         ),
     },
-    // Rename Reviewer to Physiotherapist
+    {
+        accessorKey: "teamDoctor",
+        header: "Team Doctor",
+        cell: ({ row }) => row.original.teamDoctor || "Dr. Jose Maria",
+    },
     {
         accessorKey: "reviewer",
         header: "Physiotherapist",
