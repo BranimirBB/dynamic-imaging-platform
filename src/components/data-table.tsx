@@ -50,7 +50,6 @@ import {
     VisibilityState,
 } from "@tanstack/react-table"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
-import { toast } from "sonner"
 import { z } from "zod"
 
 import { useIsMobile } from "@/hooks/use-mobile"
@@ -62,7 +61,6 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
     Drawer,
     DrawerClose,
@@ -117,9 +115,7 @@ export const schema = z.object({
     patientName: z.string(),
     assessmentName: z.string(),
     status: z.string(),
-    target: z.string(),
-    limit: z.string(),
-    reviewer: z.string(),
+    reviewer: z.string(), // Will be used as Physiotherapist
 })
 
 // Create a separate component for the drag handle
@@ -153,32 +149,6 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         id: "drag",
         header: () => null,
         cell: ({ row }) => <DragHandle id={row.original.id} />,
-    },
-    {
-        id: "select",
-        header: ({ table }) => (
-            <div className="flex items-center justify-center">
-                <Checkbox
-                    checked={
-                        table.getIsAllPageRowsSelected() ||
-                        (table.getIsSomePageRowsSelected() && "indeterminate")
-                    }
-                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                    aria-label="Select all"
-                />
-            </div>
-        ),
-        cell: ({ row }) => (
-            <div className="flex items-center justify-center">
-                <Checkbox
-                    checked={row.getIsSelected()}
-                    onCheckedChange={(value) => row.toggleSelected(!!value)}
-                    aria-label="Select row"
-                />
-            </div>
-        ),
-        enableSorting: false,
-        enableHiding: false,
     },
     // The Date column, which also acts as a button to open the Detail Drawer
     {
@@ -225,87 +195,31 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
             </Badge>
         ),
     },
-    {
-        accessorKey: "target",
-        header: () => <div className="w-full text-right">Target</div>,
-        cell: ({ row }) => (
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault()
-                    toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-                        loading: `Saving ${row.original.patientName}`,
-                        success: "Done",
-                        error: "Error",
-                    })
-                }}
-            >
-                <Label htmlFor={`${row.original.id}-target`} className="sr-only">
-                    Target
-                </Label>
-                <Input
-                    className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
-                    defaultValue={row.original.target}
-                    id={`${row.original.id}-target`}
-                />
-            </form>
-        ),
-    },
-    {
-        accessorKey: "limit",
-        header: () => <div className="w-full text-right">Limit</div>,
-        cell: ({ row }) => (
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault()
-                    toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-                        loading: `Saving ${row.original.patientName}`,
-                        success: "Done",
-                        error: "Error",
-                    })
-                }}
-            >
-                <Label htmlFor={`${row.original.id}-limit`} className="sr-only">
-                    Limit
-                </Label>
-                <Input
-                    className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
-                    defaultValue={row.original.limit}
-                    id={`${row.original.id}-limit`}
-                />
-            </form>
-        ),
-    },
+    // Rename Reviewer to Physiotherapist
     {
         accessorKey: "reviewer",
-        header: "Reviewer",
+        header: "Physiotherapist",
         cell: ({ row }) => {
-            const isAssigned = row.original.reviewer !== "Assign reviewer"
-
-            if (isAssigned) {
-                return row.original.reviewer
+            // If value is 'More than one', show button with dropdown
+            if (row.original.reviewer === "More than one" || row.original.reviewer === "Emily Whalen" || row.original.reviewer === "Assign reviewer") {
+                const [open, setOpen] = React.useState(false)
+                return (
+                    <div>
+                        <Button variant="outline" size="sm" onClick={() => setOpen(!open)}>
+                            More than one
+                        </Button>
+                        {open && (
+                            <div className="absolute z-10 mt-2 w-40 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <div className="py-1">
+                                    <div className="px-4 py-2 text-sm text-gray-700">Jamik Tashpulatov</div>
+                                    <div className="px-4 py-2 text-sm text-gray-700">Eddie Lake</div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )
             }
-
-            return (
-                <>
-                    <Label htmlFor={`${row.original.id}-reviewer`} className="sr-only">
-                        Reviewer
-                    </Label>
-                    <Select>
-                        <SelectTrigger
-                            className="h-8 w-38 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate"
-                            id={`${row.original.id}-reviewer`}
-                        >
-                            <SelectValue placeholder="Assign reviewer" />
-                        </SelectTrigger>
-                        <SelectContent align="end">
-                            <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
-                            <SelectItem value="Jamik Tashpulatov">
-                                Jamik Tashpulatov
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-                </>
-            )
+            return row.original.reviewer
         },
     },
     {
@@ -799,11 +713,9 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
                         <div className="grid grid-cols-2 gap-4">
                             <div className="flex flex-col gap-3">
                                 <Label htmlFor="target">Target</Label>
-                                <Input id="target" defaultValue={item.target} />
                             </div>
                             <div className="flex flex-col gap-3">
                                 <Label htmlFor="limit">Limit</Label>
-                                <Input id="limit" defaultValue={item.limit} />
                             </div>
                         </div>
                         <div className="flex flex-col gap-3">
