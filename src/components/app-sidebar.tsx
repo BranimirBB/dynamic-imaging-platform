@@ -46,6 +46,11 @@ const data = {
             icon: overviewLogo,
         },
         {
+            title: "Interpretation tool",
+            url: "/annotation",
+            icon: annotationLogo,
+        },
+        {
             title: "Mailbox",
             url: "/mailbox",
             icon: mailLogo,
@@ -54,11 +59,6 @@ const data = {
             title: "Patients",
             url: "/patients",
             icon: patientsLogo,
-        },
-        {
-            title: "Annotation tool",
-            url: "/annotation",
-            icon: annotationLogo,
         },
         {
             title: "Established connections",

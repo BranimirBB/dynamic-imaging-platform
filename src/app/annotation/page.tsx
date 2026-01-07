@@ -10,7 +10,7 @@ import {
 import data from "../data.json"
 import { useState, useEffect, useRef } from "react"
 
-export default function AnnotationToolPage() {
+export default function InterpretationToolPage() {
     const [hovered, setHovered] = useState<"dots" | "distance" | "area" | "angle">("dots")
     const [isManual, setIsManual] = useState(false)
     const timerRef = useRef<NodeJS.Timeout | null>(null)
@@ -91,6 +91,12 @@ export default function AnnotationToolPage() {
                                 <div className="text-muted-foreground">
                                     The Interpretation tool supports multiple tracking modes including dots, distance, area,<br /> and angle, enabling versatile and precise annotation for a wide range of imaging tasks.
                                 </div>
+                                <button
+                                    className="mt-2 rounded-lg bg-[#61C3C0] px-6 py-3 text-white font-semibold shadow hover:bg-[#4bb1ad] active:bg-[#399a97] transition-colors cursor-pointer"
+                                    type="button"
+                                >
+                                    Explore Now
+                                </button>
                             </CardFooter>
                         </Card>
                     </div>

@@ -2,39 +2,6 @@
 
 import * as React from "react"
 import {
-    closestCenter,
-    DndContext,
-    KeyboardSensor,
-    MouseSensor,
-    TouchSensor,
-    useSensor,
-    useSensors,
-    type DragEndEvent,
-    type UniqueIdentifier,
-} from "@dnd-kit/core"
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers"
-import {
-    arrayMove,
-    SortableContext,
-    useSortable,
-    verticalListSortingStrategy,
-} from "@dnd-kit/sortable"
-import { CSS } from "@dnd-kit/utilities"
-import {
-    IconChevronDown,
-    IconChevronLeft,
-    IconChevronRight,
-    IconChevronsLeft,
-    IconChevronsRight,
-    IconCircleCheckFilled,
-    IconDotsVertical,
-    IconGripVertical,
-    IconLayoutColumns,
-    IconLoader,
-    IconPlus,
-    IconTrendingUp,
-} from "@tabler/icons-react"
-import {
     ColumnDef,
     ColumnFiltersState,
     flexRender,
@@ -51,6 +18,18 @@ import {
 } from "@tanstack/react-table"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 import { z } from "zod"
+import {
+    IconChevronDown,
+    IconChevronLeft,
+    IconChevronRight,
+    IconChevronsLeft,
+    IconChevronsRight,
+    IconCircleCheckFilled,
+    IconDotsVertical,
+    IconLayoutColumns,
+    IconLoader,
+    IconTrendingUp,
+} from "@tabler/icons-react"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Badge } from "@/components/ui/badge"
@@ -119,38 +98,12 @@ export const schema = z.object({
     reviewer: z.string(),
 })
 
-// Create a separate component for the drag handle
-function DragHandle({ id }: { id: number }) {
-    const { attributes, listeners } = useSortable({
-        id,
-    })
-
-    return (
-        <Button
-            {...attributes}
-            {...listeners}
-            variant="ghost"
-            size="icon"
-            className="text-muted-foreground size-7 hover:bg-transparent"
-        >
-            <IconGripVertical className="text-muted-foreground size-3" />
-            <span className="sr-only">Drag to reorder</span>
-        </Button>
-    )
-}
-
 /**
  * 2. COLUMN DEFINITIONS
  * This is the 'Map' of the table. Each object in this array defines 
  * what one column should look like and where it gets its data.
  */
 const columns: ColumnDef<z.infer<typeof schema>>[] = [
-    // Column for the Drag handle (vertical dots)
-    {
-        id: "drag",
-        header: () => null,
-        cell: ({ row }) => <DragHandle id={row.original.id} />,
-    },
     // The Date column, which also acts as a button to open the Detail Drawer
     {
         accessorKey: "date",
@@ -173,7 +126,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     // Assessment column using a Badge for better styling
     {
         accessorKey: "assessmentName",
-        header: "Assessment Name",
+        header: "Assessment type",
         cell: ({ row }) => (
             <div className="w-48">
                 <Badge variant="outline" className="text-muted-foreground px-1.5">
@@ -260,31 +213,6 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     },
 ]
 
-function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
-    const { transform, transition, setNodeRef, isDragging } = useSortable({
-        id: row.original.id,
-    })
-
-    return (
-        <TableRow
-            data-state={row.getIsSelected() && "selected"}
-            data-dragging={isDragging}
-            ref={setNodeRef}
-            className="relative z-0 data-[dragging=true]:z-10 data-[dragging=true]:opacity-80"
-            style={{
-                transform: CSS.Transform.toString(transform),
-                transition: transition,
-            }}
-        >
-            {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
-            ))}
-        </TableRow>
-    )
-}
-
 export function DataTable({
     data: initialData,
 }: {
@@ -302,17 +230,7 @@ export function DataTable({
         pageIndex: 0,
         pageSize: 10,
     })
-    const sortableId = React.useId()
-    const sensors = useSensors(
-        useSensor(MouseSensor, {}),
-        useSensor(TouchSensor, {}),
-        useSensor(KeyboardSensor, {})
-    )
-
-    const dataIds = React.useMemo<UniqueIdentifier[]>(
-        () => data?.map(({ id }) => id) || [],
-        [data]
-    )
+    const [selectedBy, setSelectedBy] = React.useState("date")
 
     const table = useReactTable({
         data,
@@ -339,17 +257,6 @@ export function DataTable({
         getFacetedUniqueValues: getFacetedUniqueValues(),
     })
 
-    function handleDragEnd(event: DragEndEvent) {
-        const { active, over } = event
-        if (active && over && active.id !== over.id) {
-            setData((data) => {
-                const oldIndex = dataIds.indexOf(active.id)
-                const newIndex = dataIds.indexOf(over.id)
-                return arrayMove(data, oldIndex, newIndex)
-            })
-        }
-    }
-
     return (
         <Tabs
             defaultValue="outline"
@@ -359,41 +266,108 @@ export function DataTable({
                 <Label htmlFor="view-selector" className="sr-only">
                     View
                 </Label>
-                <Select defaultValue="outline">
+                <Select value={selectedBy} onValueChange={setSelectedBy}>
                     <SelectTrigger
                         className="h-8 flex w-fit @4xl/main:hidden"
                         id="view-selector"
                     >
-                        <SelectValue placeholder="Select a view" />
+                        <span className="flex items-center">
+                            Selected by: {(() => {
+                                switch (selectedBy) {
+                                    case "date": return "Date"
+                                    case "assessment-type": return "Assessment type"
+                                    case "status": return "Status"
+                                    case "physiotherapist": return "Physiotherapist"
+                                    default: return "Date"
+                                }
+                            })()}
+                            <span style={{ width: 3, display: 'inline-block' }} />
+                            <IconChevronDown className="ml-0.5" />
+                        </span>
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="outline">Outline</SelectItem>
-                        <SelectItem value="past-performance">Past Performance</SelectItem>
-                        <SelectItem value="key-personnel">Key Personnel</SelectItem>
-                        <SelectItem value="focus-documents">Focus Documents</SelectItem>
+                        <div className="px-3 py-1 text-xs text-muted-foreground select-none cursor-default font-semibold tracking-wide uppercase">
+                            Select by:
+                        </div>
+                        <SelectItem value="date">Date</SelectItem>
+                        <SelectItem value="assessment-type">Assessment type</SelectItem>
+                        <SelectItem value="status">Status</SelectItem>
+                        <SelectItem value="physiotherapist">Physiotherapist</SelectItem>
                     </SelectContent>
                 </Select>
-                <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
-                    <TabsTrigger value="outline">Outline</TabsTrigger>
-                    <TabsTrigger value="past-performance">
-                        Past Performance <Badge variant="secondary">3</Badge>
-                    </TabsTrigger>
-                    <TabsTrigger value="key-personnel">
-                        Key Personnel <Badge variant="secondary">2</Badge>
-                    </TabsTrigger>
-                    <TabsTrigger value="focus-documents">Focus Documents</TabsTrigger>
-                </TabsList>
                 <div className="flex items-center gap-2">
+                    <Input
+                        type="text"
+                        placeholder="Search..."
+                        className="h-8 w-42 rounded-md border-2 border-[#EAEAEA] bg-background px-2 text-sm focus-visible:ring-2 focus-visible:ring-[#61C3C0] focus-visible:border-[#61C3C0] focus-visible:shadow-md focus-visible:shadow-sidebar-background transition-colors"
+                    />
+                </div>
+            </div>
+            <TabsContent
+                value="outline"
+                className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
+            >
+                <div className="overflow-hidden rounded-lg border">
+                    <Table>
+                        <TableHeader className="bg-muted sticky top-0 z-10">
+                            {table.getHeaderGroups().map((headerGroup) => (
+                                <TableRow key={headerGroup.id}>
+                                    {headerGroup.headers.map((header, idx) => {
+                                        return (
+                                            <TableHead key={header.id} colSpan={header.colSpan} className={idx === 0 ? "pl-5" : ""}>
+                                                {header.isPlaceholder
+                                                    ? null
+                                                    : flexRender(
+                                                        header.column.columnDef.header,
+                                                        header.getContext()
+                                                    )}
+                                            </TableHead>
+                                        )
+                                    })}
+                                </TableRow>
+                            ))}
+                        </TableHeader>
+                        <TableBody className="**:data-[slot=table-cell]:first:w-8">
+                            {table.getRowModel().rows?.length ? (
+                                // Render standard rows, no drag-and-drop
+                                <>
+                                    {table.getRowModel().rows.map((row) => (
+                                        <TableRow
+                                            key={row.id}
+                                            data-state={row.getIsSelected() && "selected"}
+                                        >
+                                            {row.getVisibleCells().map((cell, idx) => (
+                                                <TableCell key={cell.id} className={idx === 0 ? "pl-5" : ""}>
+                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                </TableCell>
+                                            ))}
+                                        </TableRow>
+                                    ))}
+                                </>
+                            ) : (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={columns.length}
+                                        className="h-24 text-center"
+                                    >
+                                        No results.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </div>
+                <div className="flex items-center justify-between px-4">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm">
+                            <Button variant="outline" size="sm" className="-ml-4">
                                 <IconLayoutColumns />
                                 <span className="hidden lg:inline">Customize Columns</span>
                                 <span className="lg:hidden">Columns</span>
                                 <IconChevronDown />
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-56">
+                        <DropdownMenuContent align="start" className="w-56">
                             {table
                                 .getAllColumns()
                                 .filter(
@@ -417,97 +391,7 @@ export function DataTable({
                                 })}
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <Button variant="outline" size="sm">
-                        <IconPlus />
-                        <span className="hidden lg:inline">Add Section</span>
-                    </Button>
-                </div>
-            </div>
-            <TabsContent
-                value="outline"
-                className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
-            >
-                <div className="overflow-hidden rounded-lg border">
-                    <DndContext
-                        collisionDetection={closestCenter}
-                        modifiers={[restrictToVerticalAxis]}
-                        onDragEnd={handleDragEnd}
-                        sensors={sensors}
-                        id={sortableId}
-                    >
-                        <Table>
-                            <TableHeader className="bg-muted sticky top-0 z-10">
-                                {table.getHeaderGroups().map((headerGroup) => (
-                                    <TableRow key={headerGroup.id}>
-                                        {headerGroup.headers.map((header) => {
-                                            return (
-                                                <TableHead key={header.id} colSpan={header.colSpan}>
-                                                    {header.isPlaceholder
-                                                        ? null
-                                                        : flexRender(
-                                                            header.column.columnDef.header,
-                                                            header.getContext()
-                                                        )}
-                                                </TableHead>
-                                            )
-                                        })}
-                                    </TableRow>
-                                ))}
-                            </TableHeader>
-                            <TableBody className="**:data-[slot=table-cell]:first:w-8">
-                                {table.getRowModel().rows?.length ? (
-                                    <SortableContext
-                                        items={dataIds}
-                                        strategy={verticalListSortingStrategy}
-                                    >
-                                        {table.getRowModel().rows.map((row) => (
-                                            <DraggableRow key={row.id} row={row} />
-                                        ))}
-                                    </SortableContext>
-                                ) : (
-                                    <TableRow>
-                                        <TableCell
-                                            colSpan={columns.length}
-                                            className="h-24 text-center"
-                                        >
-                                            No results.
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
-                    </DndContext>
-                </div>
-                <div className="flex items-center justify-between px-4">
-                    <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-                        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                        {table.getFilteredRowModel().rows.length} row(s) selected.
-                    </div>
-                    <div className="flex w-full items-center gap-8 lg:w-fit">
-                        <div className="hidden items-center gap-2 lg:flex">
-                            <Label htmlFor="rows-per-page" className="text-sm font-medium">
-                                Rows per page
-                            </Label>
-                            <Select
-                                value={`${table.getState().pagination.pageSize}`}
-                                onValueChange={(value) => {
-                                    table.setPageSize(Number(value))
-                                }}
-                            >
-                                <SelectTrigger className="h-8 w-20" id="rows-per-page">
-                                    <SelectValue
-                                        placeholder={table.getState().pagination.pageSize}
-                                    />
-                                </SelectTrigger>
-                                <SelectContent side="top">
-                                    {[10, 20, 30, 40, 50].map((pageSize) => (
-                                        <SelectItem key={pageSize} value={`${pageSize}`}>
-                                            {pageSize}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
+                    <div className="flex w-full items-center gap-8 lg:w-fit justify-end">
                         <div className="flex w-fit items-center justify-center text-sm font-medium">
                             Page {table.getState().pagination.pageIndex + 1} of{" "}
                             {table.getPageCount()}
