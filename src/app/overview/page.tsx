@@ -61,7 +61,6 @@ const newsItems = [
 
 export default function OverviewPage() {
     const [selectedDidYouKnow, setSelectedDidYouKnow] = useState<number | null>(null)
-    const [selectedLearnNow, setSelectedLearnNow] = useState<number | null>(null)
     const [isCaseModalOpen, setIsCaseModalOpen] = useState(false)
     const [isVideoModalOpen, setIsVideoModalOpen] = useState(false)
     const [selectedNews, setSelectedNews] = useState<number | null>(null);

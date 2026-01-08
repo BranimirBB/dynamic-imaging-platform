@@ -71,8 +71,8 @@ const data = {
             icon: globalCommunityLogo,
         },
         {
-            title: "Learning community",
-            url: "/learning-community",
+            title: "Learning",
+            url: "/learning-community/ultrasound-knowledge",
             icon: learningLogo,
         },
     ],
