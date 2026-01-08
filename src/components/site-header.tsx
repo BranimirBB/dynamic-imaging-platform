@@ -18,7 +18,6 @@ const routeTitles: Record<string, string> = {
     "/mailbox": "Mailbox",
     "/patients": "Patients",
     "/annotation": "Interpretation Tool",
-    "/connections": "Established Connections",
     "/global-community": "Global Community",
     "/learning-community": "Learning",
     "/learning-community/ultrasound-knowledge": "Learning",

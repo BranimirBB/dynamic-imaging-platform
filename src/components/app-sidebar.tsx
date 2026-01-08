@@ -14,7 +14,6 @@ import overviewLogo from "@/assets/icons/OverviewPageLogo.svg"
 import mailLogo from "@/assets/icons/MailPageLogo.svg"
 import patientsLogo from "@/assets/icons/PatientsPageLogo.svg"
 import annotationLogo from "@/assets/icons/AnnotationToolPageLogo.svg"
-import connectionLogo from "@/assets/icons/EstablishedConnectionLogo.svg"
 import globalCommunityLogo from "@/assets/icons/GlobalCommunityPageLogo.svg"
 import learningLogo from "@/assets/icons/LearningPageLogo.svg"
 import { NavDocuments } from "@/components/nav-documents"
@@ -59,11 +58,6 @@ const data = {
             title: "Patients",
             url: "/patients",
             icon: patientsLogo,
-        },
-        {
-            title: "Established connections",
-            url: "/connections",
-            icon: connectionLogo,
         },
         {
             title: "Global community",
