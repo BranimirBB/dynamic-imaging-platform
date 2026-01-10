@@ -228,6 +228,7 @@ export function DataTable({
         pageSize: 10,
     })
     const [selectedBy, setSelectedBy] = React.useState("date")
+    const [globalFilter, setGlobalFilter] = React.useState("")
 
     const table = useReactTable({
         data,
@@ -238,6 +239,7 @@ export function DataTable({
             rowSelection,
             columnFilters,
             pagination,
+            globalFilter,
         },
         getRowId: (row) => row.id.toString(),
         enableRowSelection: true,
@@ -246,6 +248,7 @@ export function DataTable({
         onColumnFiltersChange: setColumnFilters,
         onColumnVisibilityChange: setColumnVisibility,
         onPaginationChange: setPagination,
+        onGlobalFilterChange: setGlobalFilter,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -269,7 +272,7 @@ export function DataTable({
                         id="view-selector"
                     >
                         <span className="flex items-center">
-                            Selected by: {(() => {
+                            Sort by: {(() => {
                                 switch (selectedBy) {
                                     case "date": return "Date"
                                     case "assessment-type": return "Assessment type"
@@ -284,7 +287,7 @@ export function DataTable({
                     </SelectTrigger>
                     <SelectContent>
                         <div className="px-3 py-1 text-xs text-muted-foreground select-none cursor-default font-semibold tracking-wide uppercase">
-                            Select by:
+                            Sort by:
                         </div>
                         <SelectItem value="date">Date</SelectItem>
                         <SelectItem value="assessment-type">Assessment type</SelectItem>
@@ -296,8 +299,42 @@ export function DataTable({
                     <Input
                         type="text"
                         placeholder="Search..."
+                        value={globalFilter ?? ""}
+                        onChange={(e) => setGlobalFilter(e.target.value)}
                         className="h-8 w-42 rounded-md border-2 border-[#EAEAEA] bg-background px-2 text-sm focus-visible:ring-2 focus-visible:ring-[#61C3C0] focus-visible:border-[#61C3C0] focus-visible:shadow-md focus-visible:shadow-sidebar-background transition-colors"
                     />
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size="sm" className="h-8">
+                                <IconLayoutColumns />
+                                Filter
+                                <IconChevronDown />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-56">
+                            {table
+                                .getAllColumns()
+                                .filter(
+                                    (column) =>
+                                        typeof column.accessorFn !== "undefined" &&
+                                        column.getCanHide()
+                                )
+                                .map((column) => {
+                                    return (
+                                        <DropdownMenuCheckboxItem
+                                            key={column.id}
+                                            className="capitalize"
+                                            checked={column.getIsVisible()}
+                                            onCheckedChange={(value) =>
+                                                column.toggleVisibility(!!value)
+                                            }
+                                        >
+                                            {column.id}
+                                        </DropdownMenuCheckboxItem>
+                                    )
+                                })}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
             </div>
             <TabsContent
@@ -354,40 +391,7 @@ export function DataTable({
                         </TableBody>
                     </Table>
                 </div>
-                <div className="flex items-center justify-between px-4">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm" className="-ml-4">
-                                <IconLayoutColumns />
-                                <span className="hidden lg:inline">Customize Columns</span>
-                                <span className="lg:hidden">Columns</span>
-                                <IconChevronDown />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="start" className="w-56">
-                            {table
-                                .getAllColumns()
-                                .filter(
-                                    (column) =>
-                                        typeof column.accessorFn !== "undefined" &&
-                                        column.getCanHide()
-                                )
-                                .map((column) => {
-                                    return (
-                                        <DropdownMenuCheckboxItem
-                                            key={column.id}
-                                            className="capitalize"
-                                            checked={column.getIsVisible()}
-                                            onCheckedChange={(value) =>
-                                                column.toggleVisibility(!!value)
-                                            }
-                                        >
-                                            {column.id}
-                                        </DropdownMenuCheckboxItem>
-                                    )
-                                })}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                <div className="flex items-center justify-end px-4">
                     <div className="flex w-full items-center gap-8 lg:w-fit justify-end">
                         <div className="flex w-fit items-center justify-center text-sm font-medium">
                             Page {table.getState().pagination.pageIndex + 1} of{" "}
