@@ -45,7 +45,7 @@ const data = {
             icon: overviewLogo,
         },
         {
-            title: "Interpretation tool",
+            title: "Annotation tool",
             url: "/annotation",
             icon: annotationLogo,
         },
@@ -66,7 +66,7 @@ const data = {
         },
         {
             title: "Learning",
-            url: "/learning-community/ultrasound-knowledge",
+            url: "/learning/ultrasound-knowledge",
             icon: learningLogo,
         },
     ],

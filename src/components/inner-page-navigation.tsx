@@ -1,9 +1,11 @@
 import { useLocation, Link } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
 
 const navItems = [
-  { label: "Ultrasound knowledge", href: "/learning-community/ultrasound-knowledge" },
-  { label: "ProbeFix Dynamic", href: "/learning-community/probefix-dynamic" },
-  { label: "Learning Community", href: "/learning-community/learning-community" },
+  { label: "Ultrasound knowledge", href: "/learning/ultrasound-knowledge", isPremium: false },
+  { label: "ProbeFix Dynamic", href: "/learning/probefix-dynamic", isPremium: false },
+  { label: "Learning Community", href: "/learning/learning-community", isPremium: true },
+  { label: "Workshops", href: "/learning/workshops", isPremium: true },
 ];
 
 export function InnerPageNavigation() {
@@ -17,7 +19,7 @@ export function InnerPageNavigation() {
           <Link
             key={item.href}
             to={item.href}
-            className={`pb-2 transition-colors
+            className={`pb-2 transition-colors flex items-center gap-2
               ${isActive
                 ? "font-bold text-black border-b-2 border-black"
                 : "font-medium text-gray-500 border-b-2 border-transparent hover:text-black"}
@@ -25,6 +27,19 @@ export function InnerPageNavigation() {
             style={{ marginBottom: "-2px" }}
           >
             {item.label}
+            {item.isPremium && (
+              <Badge 
+                variant="outline" 
+                className="text-xs px-1.5 py-0"
+                style={{ 
+                  borderColor: '#6188C3', 
+                  backgroundColor: '#EFF7FF',
+                  color: '#6188C3'
+                }}
+              >
+                Premium
+              </Badge>
+            )}
           </Link>
         );
       })}

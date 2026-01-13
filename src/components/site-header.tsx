@@ -17,12 +17,13 @@ const routeTitles: Record<string, string> = {
     "/overview": "Overview",
     "/mailbox": "Mailbox",
     "/patients": "Patients",
-    "/annotation": "Interpretation Tool",
+    "/annotation": "Annotation Tool",
     "/global-community": "Global Community",
-    "/learning-community": "Learning",
-    "/learning-community/ultrasound-knowledge": "Learning",
-    "/learning-community/probefix-dynamic": "Learning",
-    "/learning-community/learning-community": "Learning",
+    "/learning": "Learning",
+    "/learning/ultrasound-knowledge": "Learning",
+    "/learning/probefix-dynamic": "Learning",
+    "/learning/learning-community": "Learning",
+    "/learning/workshops": "Learning",
 }
 
 export function SiteHeader() {

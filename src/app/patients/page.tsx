@@ -21,12 +21,19 @@ export default function PatientsPage() {
         "Michael Brown", "Emma Davis", "David Martinez", "Lisa Anderson",
         "James Wilson", "Anna Taylor", "Robert Moore", "Emily Thomas"
     ]
+
+    const patientDOBs = [
+        "11.04.2001", "23.08.1995", "05.12.1998", "17.03.2000",
+        "29.06.1993", "14.11.1999", "08.02.1997", "21.09.2002",
+        "03.07.1996", "19.01.2003", "26.05.1994", "12.10.2001"
+    ]
     
     const patients = Array.from({ length: 12 }, (_, i) => ({
         id: i,
+        patientId: `P-${String(1000 + i).padStart(4, '0')}`,
         name: patientNames[i],
         status: i % 3 === 0 ? "Ready for training" : i % 3 === 1 ? "Early in rehabilitation" : "Ready for competing",
-        age: 20 + (i * 2),
+        dateOfBirth: patientDOBs[i],
         weight: 65 + (i * 3),
         avatar: "/avatars/shadcn.jpg"
     }))
@@ -147,9 +154,12 @@ export default function PatientsPage() {
                                                 </Badge>
                                             </div>
                                             
-                                            {/* Bottom Row - Metrics */}
+                                            {/* Bottom Row - DOB and Patient ID */}
                                             <p className="text-xs text-muted-foreground">
-                                                {patient.age}yo | {patient.weight}kg
+                                                DOB: {patient.dateOfBirth}
+                                            </p>
+                                            <p className="text-xs text-muted-foreground">
+                                                ID: {patient.patientId}
                                             </p>
                                         </div>
                                     </div>
@@ -194,8 +204,12 @@ export default function PatientsPage() {
                                                 </div>
                                                 <div className="grid grid-cols-2 gap-4 text-sm">
                                                     <div>
-                                                        <span className="text-muted-foreground">Age:</span>
-                                                        <span className="ml-2 font-medium">{patients[selectedPatient].age} years</span>
+                                                        <span className="text-muted-foreground">Date of Birth:</span>
+                                                        <span className="ml-2 font-medium">{patients[selectedPatient].dateOfBirth}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span className="text-muted-foreground">Patient ID:</span>
+                                                        <span className="ml-2 font-medium">{patients[selectedPatient].patientId}</span>
                                                     </div>
                                                     <div>
                                                         <span className="text-muted-foreground">Weight:</span>

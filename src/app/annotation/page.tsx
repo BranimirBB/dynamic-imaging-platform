@@ -10,7 +10,7 @@ import {
 import data from "../data.json"
 import { useState, useEffect, useRef } from "react"
 
-export default function InterpretationToolPage() {
+export default function AnnotationToolPage() {
     const [hovered, setHovered] = useState<"dots" | "distance" | "area" | "angle">("dots")
     const [isManual, setIsManual] = useState(false)
     const timerRef = useRef<NodeJS.Timeout | null>(null)
@@ -49,9 +49,9 @@ export default function InterpretationToolPage() {
                     <div className="px-4 lg:px-6">
                         <Card className="@container/card relative min-h-[270px] border border-[0.9px] border-[#61C3C0] shadow-[0_2px_8px_0_#61C3C0] bg-[#F0FCFB]">
                             <CardHeader>
-                                <CardDescription>Interpretation tool</CardDescription>
+                                <CardDescription>Annotation tool</CardDescription>
                                 <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                                    Interpretation tool
+                                    Annotation tool
                                 </CardTitle>
                                 <div className="flex flex-col items-center gap-2 mt-2 absolute right-[60px] top-1/2 -translate-y-1/2 z-10">
                                     <span
@@ -89,7 +89,7 @@ export default function InterpretationToolPage() {
                                     <IconTrendingUp className="size-4" />
                                 </div>
                                 <div className="text-muted-foreground">
-                                    The Interpretation tool supports multiple tracking modes including dots, distance, area,<br /> and angle, enabling versatile and precise annotation for a wide range of imaging tasks.
+                                    The Annotation tool supports multiple tracking modes including dots, distance, area,<br /> and angle, enabling versatile and precise annotation for a wide range of imaging tasks.
                                 </div>
                                 <button
                                     className="mt-2 rounded-lg bg-[#61C3C0] px-6 py-3 text-white font-semibold shadow hover:bg-[#4bb1ad] active:bg-[#399a97] transition-colors cursor-pointer"
