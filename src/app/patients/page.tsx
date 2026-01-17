@@ -17,6 +17,7 @@ import UltrasoundImage from "@/assets/UltrasoundImage.png"
 export default function PatientsPage() {
     const [selectedPatient, setSelectedPatient] = useState<number | null>(0)
     const [activeTab, setActiveTab] = useState<"evaluations" | "files">("evaluations")
+    const [activeSection, setActiveSection] = useState<"helmond" | "psv">("helmond")
 
     // Mock patient data - will be populated later
     const patientNames = [
@@ -106,7 +107,46 @@ export default function PatientsPage() {
                     border-color: #6b7280 !important;
                 }
             `}</style>
-            <div className="grid grid-cols-1 lg:grid-cols-10 gap-4 mt-4 h-full">
+            
+            {/* Inner Page Navigation */}
+            <nav className="flex gap-8 border-b border-gray-200 mb-2 mt-4">
+                <button
+                    onClick={() => setActiveSection("helmond")}
+                    className={`pb-2 transition-colors flex items-center gap-2
+                        ${activeSection === "helmond"
+                            ? "font-bold text-black border-b-2 border-black"
+                            : "font-medium text-gray-500 border-b-2 border-transparent hover:text-black"}
+                    `}
+                    style={{ marginBottom: "-1px" }}
+                >
+                    Helmond Rehabilitation
+                </button>
+                <button
+                    onClick={() => setActiveSection("psv")}
+                    className={`pb-2 transition-colors flex items-center gap-2
+                        ${activeSection === "psv"
+                            ? "font-bold text-black border-b-2 border-black"
+                            : "font-medium text-gray-500 border-b-2 border-transparent hover:text-black"}
+                    `}
+                    style={{ marginBottom: "-1px" }}
+                >
+                    PSV Eindhoven
+                </button>
+                <button
+                    onClick={() => {/* Non-functional - placeholder for future "Add more" functionality */}}
+                    className="pb-2 transition-colors flex items-center gap-1.5 font-medium text-gray-400 border-b-2 border-transparent hover:text-gray-600 cursor-pointer"
+                    style={{ marginBottom: "-1px" }}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Add more
+                </button>
+            </nav>
+
+            {activeSection === "helmond" ? (
+            <div className="grid grid-cols-1 lg:grid-cols-10 gap-4 h-full">
                 {/* Left Panel - Master List (30-35% width) */}
                 <div className="lg:col-span-3 flex flex-col gap-3">
                     {/* Action buttons */}
@@ -325,6 +365,15 @@ export default function PatientsPage() {
                     </Card>
                 </div>
             </div>
+            ) : (
+                /* PSV Eindhoven Section - Placeholder */
+                <div className="flex items-center justify-center h-96">
+                    <div className="text-center">
+                        <h3 className="text-xl font-semibold text-muted-foreground mb-2">PSV Eindhoven</h3>
+                        <p className="text-muted-foreground">Coming soon...</p>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
