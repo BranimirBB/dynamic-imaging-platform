@@ -10,10 +10,13 @@ import { IconUserPlus, IconFilter, IconSearch } from "@tabler/icons-react"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { PatientEvaluationsTable } from "@/components/patient-evaluations-table"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import data from "../data.json"
+import UltrasoundImage from "@/assets/UltrasoundImage.png"
 
 export default function PatientsPage() {
     const [selectedPatient, setSelectedPatient] = useState<number | null>(0)
+    const [activeTab, setActiveTab] = useState<"evaluations" | "files">("evaluations")
 
     // Mock patient data - will be populated later
     const patientNames = [
@@ -27,12 +30,20 @@ export default function PatientsPage() {
         "29.06.1993", "14.11.1999", "08.02.1997", "21.09.2002",
         "03.07.1996", "19.01.2003", "26.05.1994", "12.10.2001"
     ]
+
+    // Mock injury data - muscle/skeleton related injuries
+    const patientInjuries = [
+        "Calf strain", "Hamstring tear", null, "ACL sprain",
+        "Quadriceps contusion", "Achilles tendinopathy", null, "Biceps femoris pain",
+        "Tibia stress fracture", "Groin strain", null, "Patellar tendinitis"
+    ]
     
     const patients = Array.from({ length: 12 }, (_, i) => ({
         id: i,
         patientId: `P-${String(1000 + i).padStart(4, '0')}`,
         name: patientNames[i],
         status: i % 3 === 0 ? "Ready for training" : i % 3 === 1 ? "Early in rehabilitation" : "Ready for competing",
+        currentInjury: i % 3 === 2 ? null : patientInjuries[i], // No injury for "Ready for competing"
         dateOfBirth: patientDOBs[i],
         weight: 65 + (i * 3),
         avatar: "/avatars/shadcn.jpg"
@@ -51,9 +62,6 @@ export default function PatientsPage() {
                 }
                 .selected-patient-card .patient-notes {
                     border: 1px solid #5589C8 !important;
-                }
-                .selected-patient-card .left-panel-avatar {
-                    border: 2px solid #5589C8 !important;
                 }
                 .selected-patient-card hr,
                 .selected-patient-card [data-orientation="horizontal"] {
@@ -86,6 +94,16 @@ export default function PatientsPage() {
                 }
                 .badge-ready:hover {
                     background-color: #16a34a !important;
+                }
+                .badge-injury {
+                    background-color: #e5e7eb !important;
+                    color: #374151 !important;
+                    border-color: #d1d5db !important;
+                }
+                .badge-rehabilitation {
+                    background-color: #6b7280 !important;
+                    color: white !important;
+                    border-color: #6b7280 !important;
                 }
             `}</style>
             <div className="grid grid-cols-1 lg:grid-cols-10 gap-4 mt-4 h-full">
@@ -124,37 +142,33 @@ export default function PatientsPage() {
                                 onClick={() => setSelectedPatient(patient.id)}
                             >
                                 <CardContent className="p-4">
-                                    <div className="flex items-start gap-4">
-                                        {/* Left Side - Avatar */}
-                                        <Avatar className="h-16 w-16 rounded-lg flex-shrink-0 left-panel-avatar">
-                                            <AvatarImage src={patient.avatar} alt={patient.name} />
-                                            <AvatarFallback className="rounded-lg text-lg">
-                                                {patient.name.split(' ').map(n => n[0]).join('')}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                        
-                                        {/* Right Side - Information Stack */}
-                                        <div className="flex-1 min-w-0 space-y-1.5">
-                                            {/* Top Row - Patient Name and Status Badge */}
-                                            <div className="flex items-start justify-between gap-2">
-                                                <h3 className="font-semibold text-base leading-none truncate flex-1">
-                                                    {patient.name}
-                                                </h3>
+                                    <div className="space-y-0">
+                                        {/* Top Row - Patient Name and Status Badge */}
+                                        <div className="flex items-start justify-between gap-2">
+                                            <h3 className="font-semibold text-base leading-none truncate flex-1">
+                                                {patient.name}
+                                            </h3>
+                                            <div className="flex flex-col items-end gap-1 flex-shrink-0">
                                                 <Badge 
-                                                    variant={
-                                                        patient.status === "Early in rehabilitation" ? "secondary" : 
-                                                        "outline"
-                                                    }
-                                                    className={`text-xs flex-shrink-0 ${
+                                                    variant="outline"
+                                                    className={`text-xs ${
                                                         patient.status === "Ready for training" ? "badge-training" : 
-                                                        patient.status === "Ready for competing" ? "badge-ready" : ""
+                                                        patient.status === "Ready for competing" ? "badge-ready" :
+                                                        patient.status === "Early in rehabilitation" ? "badge-rehabilitation" : ""
                                                     }`}
                                                 >
                                                     {patient.status}
                                                 </Badge>
+                                                {patient.currentInjury && (
+                                                    <Badge className="text-xs badge-injury">
+                                                        {patient.currentInjury}
+                                                    </Badge>
+                                                )}
                                             </div>
-                                            
-                                            {/* Bottom Row - DOB and Patient ID */}
+                                        </div>
+                                        
+                                        {/* Bottom Row - DOB and Patient ID */}
+                                        <div style={{ marginTop: patient.currentInjury ? '-10px' : '0px' }}>
                                             <p className="text-xs text-muted-foreground">
                                                 DOB: {patient.dateOfBirth}
                                             </p>
@@ -189,18 +203,23 @@ export default function PatientsPage() {
                                                     <h2 className="text-2xl font-bold">
                                                         {patients[selectedPatient].name}
                                                     </h2>
-                                                    <Badge 
-                                                        variant={
-                                                            patients[selectedPatient].status === "Early in rehabilitation" ? "secondary" : 
-                                                            "outline"
-                                                        }
-                                                        className={`text-sm ${
-                                                            patients[selectedPatient].status === "Ready for training" ? "badge-training" : 
-                                                            patients[selectedPatient].status === "Ready for competing" ? "badge-ready" : ""
-                                                        }`}
-                                                    >
-                                                        {patients[selectedPatient].status}
-                                                    </Badge>
+                                                    <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                                                        <Badge 
+                                                            variant="outline"
+                                                            className={`text-sm ${
+                                                                patients[selectedPatient].status === "Ready for training" ? "badge-training" : 
+                                                                patients[selectedPatient].status === "Ready for competing" ? "badge-ready" :
+                                                                patients[selectedPatient].status === "Early in rehabilitation" ? "badge-rehabilitation" : ""
+                                                            }`}
+                                                        >
+                                                            {patients[selectedPatient].status}
+                                                        </Badge>
+                                                        {patients[selectedPatient].currentInjury && (
+                                                            <Badge className="text-sm badge-injury">
+                                                                {patients[selectedPatient].currentInjury}
+                                                            </Badge>
+                                                        )}
+                                                    </div>
                                                 </div>
                                                 <div className="grid grid-cols-2 gap-4 text-sm">
                                                     <div>
@@ -233,15 +252,66 @@ export default function PatientsPage() {
 
                                     <Separator />
 
-                                    {/* 3. Ultrasound Evaluations Section */}
+                                    {/* 3. Tabbed Section - Evaluations & Files */}
                                     <div className="space-y-3">
-                                        <h3 className="text-lg font-semibold">Ultrasound Evaluations</h3>
-                                        <div className="patient-evaluations-table">
-                                            <PatientEvaluationsTable 
-                                                data={data} 
-                                                patientName={patients[selectedPatient].name}
-                                            />
-                                        </div>
+                                        {/* Tab Navigation */}
+                                        <nav className="flex gap-8 border-b border-gray-200">
+                                            <button
+                                                onClick={() => setActiveTab("evaluations")}
+                                                className={`pb-2 transition-colors flex items-center gap-2
+                                                    ${activeTab === "evaluations"
+                                                        ? "font-bold text-black border-b-2 border-black"
+                                                        : "font-medium text-gray-500 border-b-2 border-transparent hover:text-black"}
+                                                `}
+                                                style={{ marginBottom: "-1px" }}
+                                            >
+                                                Ultrasound Evaluations
+                                            </button>
+                                            <button
+                                                onClick={() => setActiveTab("files")}
+                                                className={`pb-2 transition-colors flex items-center gap-2
+                                                    ${activeTab === "files"
+                                                        ? "font-bold text-black border-b-2 border-black"
+                                                        : "font-medium text-gray-500 border-b-2 border-transparent hover:text-black"}
+                                                `}
+                                                style={{ marginBottom: "-1px" }}
+                                            >
+                                                Patient's files
+                                            </button>
+                                        </nav>
+
+                                        {/* Tab Content */}
+                                        {activeTab === "evaluations" ? (
+                                            <div className="patient-evaluations-table">
+                                                <PatientEvaluationsTable 
+                                                    data={data} 
+                                                    patientName={patients[selectedPatient].name}
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className="grid grid-cols-4 gap-3 pt-2">
+                                                {Array.from({ length: 16 }).map((_, index) => (
+                                                    <Dialog key={index}>
+                                                        <DialogTrigger asChild>
+                                                            <div className="aspect-square cursor-pointer rounded-lg overflow-hidden border border-gray-200 hover:border-[#5589C8] hover:shadow-md transition-all">
+                                                                <img 
+                                                                    src={UltrasoundImage} 
+                                                                    alt={`Ultrasound ${index + 1}`}
+                                                                    className="w-full h-full object-cover"
+                                                                />
+                                                            </div>
+                                                        </DialogTrigger>
+                                                        <DialogContent className="max-w-3xl">
+                                                            <img 
+                                                                src={UltrasoundImage} 
+                                                                alt={`Ultrasound ${index + 1}`}
+                                                                className="w-full h-auto rounded-lg"
+                                                            />
+                                                        </DialogContent>
+                                                    </Dialog>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                 </>
                             ) : (
