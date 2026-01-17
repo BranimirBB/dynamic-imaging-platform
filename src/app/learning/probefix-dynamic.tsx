@@ -4,36 +4,44 @@ import { Card, CardHeader, CardDescription, CardContent } from "@/components/ui/
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { InnerPageNavigation } from "@/components/inner-page-navigation"
+import ErikHAvatar from "@/assets/ErikH.jpeg"
+import AukjeAvatar from "@/assets/Aukje.jpeg"
+import RicardoAvatar from "@/assets/Ricardo.png"
+import MusculoskeletalVideo from "@/assets/MusculoskeletalScanning.mov"
+import VideoUsono from "@/assets/VideoUsono.mov"
 
 const learnNowItems = [
     {
         title: "Cardiac Imaging Fundamentals",
         shortDesc: "Master heart ultrasound basics",
         fullDesc: "This comprehensive module covers the fundamental principles of cardiac ultrasound imaging, including chamber views, valve assessment, and basic measurements.",
+        video: VideoUsono,
         author: {
-            name: "Dr. Sarah M.",
-            experience: "15 years of experience in cardiology",
-            avatar: "/avatars/shadcn.jpg"
+            name: "Aukje Brekelmans",
+            experience: "15 years of experience in physiotherapy",
+            avatar: AukjeAvatar
         }
     },
     {
         title: "Musculoskeletal Scanning",
         shortDesc: "Joint and soft tissue imaging",
         fullDesc: "Learn advanced techniques for scanning joints, tendons, ligaments, and muscles. This module includes practical tips for common MSK conditions.",
+        video: MusculoskeletalVideo,
         author: {
-            name: "Erik H.",
+            name: "Dr. Erik Eurelings",
             experience: "27 years of experience in physiotherapy",
-            avatar: "/avatars/shadcn.jpg"
+            avatar: ErikHAvatar
         }
     },
     {
         title: "Obstetric Ultrasound",
         shortDesc: "Prenatal imaging techniques",
         fullDesc: "Master the essential skills for obstetric ultrasound including fetal biometry, anatomy survey, and assessment of fetal well-being throughout pregnancy.",
+        video: null,
         author: {
-            name: "Dr. Maria K.",
-            experience: "20 years of experience in obstetrics",
-            avatar: "/avatars/shadcn.jpg"
+            name: "Dr. Ricardo Agostino",
+            experience: "20 years of experience in physiotherapy",
+            avatar: RicardoAvatar
         }
     },
 ]
@@ -132,8 +140,16 @@ export default function ProbefixDynamicPage() {
                                 className="border rounded-lg p-4 cursor-pointer hover:bg-accent/50 transition-colors space-y-3"
                             >
                                 <div className="relative aspect-video bg-muted rounded-md flex items-center justify-center overflow-hidden">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
-                                    <IconPlayerPlay className="size-8 text-muted-foreground" />
+                                    {item.video ? (
+                                        <video 
+                                            src={item.video} 
+                                            className="absolute inset-0 w-full h-full object-cover"
+                                            muted
+                                        />
+                                    ) : (
+                                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
+                                    )}
+                                    <IconPlayerPlay className="size-8 text-muted-foreground z-10" />
                                 </div>
                                 <div>
                                     <p className="font-medium text-sm">{item.title}</p>
@@ -165,8 +181,19 @@ export default function ProbefixDynamicPage() {
                         </DialogDescription>
                     </DialogHeader>
                     <div className="relative aspect-video bg-muted rounded-lg flex items-center justify-center overflow-hidden mt-4">
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
-                        <IconPlayerPlay className="size-16 text-muted-foreground" />
+                        {selectedLearnNow !== null && learnNowItems[selectedLearnNow].video ? (
+                            <video 
+                                src={learnNowItems[selectedLearnNow].video} 
+                                className="w-full h-full object-cover"
+                                controls
+                                autoPlay
+                            />
+                        ) : (
+                            <>
+                                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5" />
+                                <IconPlayerPlay className="size-16 text-muted-foreground" />
+                            </>
+                        )}
                     </div>
                     {/* About the author section */}
                     {selectedLearnNow !== null && (
