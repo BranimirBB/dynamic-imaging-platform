@@ -208,7 +208,18 @@ export default function OverviewPage() {
                             </div>
 
                             <div onClick={() => setIsVideoModalOpen(true)} className="cursor-pointer transition-transform hover:scale-[1.01]">
-                                <Card className="@container/card custom-card-outline card-hover-special h-full hover:bg-accent/50 transition-colors">
+                                <Card className="@container/card custom-card-outline card-hover-special h-full hover:bg-accent/50 transition-colors relative">
+                                    {/* Contextual menu dots */}
+                                    <button 
+                                        onClick={(e) => { e.stopPropagation(); /* Non-functional placeholder */ }}
+                                        className="absolute top-3 right-3 p-1 rounded-md hover:bg-gray-200 transition-colors z-10"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-gray-500">
+                                            <circle cx="12" cy="5" r="1.5" />
+                                            <circle cx="12" cy="12" r="1.5" />
+                                            <circle cx="12" cy="19" r="1.5" />
+                                        </svg>
+                                    </button>
                                     <CardHeader>
                                         <CardDescription>Did you know that</CardDescription>
                                         <CardTitle className="text-2xl font-semibold">
@@ -239,7 +250,18 @@ export default function OverviewPage() {
                         </div>
 
                         {/* Right Area - 1 column wide, full height */}
-                        <Card className="@container/card custom-card-outline lg:row-span-4">
+                        <Card className="@container/card custom-card-outline lg:row-span-4 relative">
+                            {/* Contextual menu dots */}
+                            <button 
+                                onClick={(e) => { e.stopPropagation(); /* Non-functional placeholder */ }}
+                                className="absolute top-3 right-3 p-1 rounded-md hover:bg-gray-200 transition-colors z-10"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-gray-500">
+                                    <circle cx="12" cy="5" r="1.5" />
+                                    <circle cx="12" cy="12" r="1.5" />
+                                    <circle cx="12" cy="19" r="1.5" />
+                                </svg>
+                            </button>
                             <CardHeader>
                                 <CardDescription>News</CardDescription>
                                 <CardTitle className="text-2xl font-semibold">

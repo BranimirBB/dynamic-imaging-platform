@@ -39,16 +39,23 @@ export default function PatientsPage() {
         "Tibia stress fracture", "Groin strain", null, "Patellar tendinitis"
     ]
     
-    const patients = Array.from({ length: 12 }, (_, i) => ({
-        id: i,
-        patientId: `P-${String(1000 + i).padStart(4, '0')}`,
-        name: patientNames[i],
-        status: i % 3 === 0 ? "Ready for training" : i % 3 === 1 ? "Early in rehabilitation" : "Ready for competing",
-        currentInjury: i % 3 === 2 ? null : patientInjuries[i], // No injury for "Ready for competing"
-        dateOfBirth: patientDOBs[i],
-        weight: 65 + (i * 3),
-        avatar: "/avatars/shadcn.jpg"
-    }))
+    const patients = Array.from({ length: 12 }, (_, i) => {
+        // Custom statuses for specific patients
+        let status = i % 3 === 0 ? "Ready for training" : i % 3 === 1 ? "Early in rehabilitation" : "Ready for competing"
+        if (i === 1) status = "Limited training" // Maria Garcia
+        if (i === 3) status = "Post surgery" // Sarah Williams
+        
+        return {
+            id: i,
+            patientId: `P-${String(1000 + i).padStart(4, '0')}`,
+            name: patientNames[i],
+            status,
+            currentInjury: i % 3 === 2 ? null : patientInjuries[i], // No injury for "Ready for competing"
+            dateOfBirth: patientDOBs[i],
+            bmc: (2200 + (i * 120)).toLocaleString('de-DE'), // BMC values like 2,200g - 3,520g
+            avatar: "/avatars/shadcn.jpg"
+        }
+    })
 
     return (
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
@@ -105,6 +112,22 @@ export default function PatientsPage() {
                     background-color: #6b7280 !important;
                     color: white !important;
                     border-color: #6b7280 !important;
+                }
+                .badge-limited-training {
+                    background-color: #3b82f6 !important;
+                    color: white !important;
+                    border-color: #3b82f6 !important;
+                }
+                .badge-limited-training:hover {
+                    background-color: #2563eb !important;
+                }
+                .badge-post-surgery {
+                    background-color: #ef4444 !important;
+                    color: white !important;
+                    border-color: #ef4444 !important;
+                }
+                .badge-post-surgery:hover {
+                    background-color: #dc2626 !important;
                 }
             `}</style>
             
@@ -194,7 +217,9 @@ export default function PatientsPage() {
                                                     className={`text-xs ${
                                                         patient.status === "Ready for training" ? "badge-training" : 
                                                         patient.status === "Ready for competing" ? "badge-ready" :
-                                                        patient.status === "Early in rehabilitation" ? "badge-rehabilitation" : ""
+                                                        patient.status === "Early in rehabilitation" ? "badge-rehabilitation" :
+                                                        patient.status === "Limited training" ? "badge-limited-training" :
+                                                        patient.status === "Post surgery" ? "badge-post-surgery" : ""
                                                     }`}
                                                 >
                                                     {patient.status}
@@ -249,7 +274,9 @@ export default function PatientsPage() {
                                                             className={`text-sm ${
                                                                 patients[selectedPatient].status === "Ready for training" ? "badge-training" : 
                                                                 patients[selectedPatient].status === "Ready for competing" ? "badge-ready" :
-                                                                patients[selectedPatient].status === "Early in rehabilitation" ? "badge-rehabilitation" : ""
+                                                                patients[selectedPatient].status === "Early in rehabilitation" ? "badge-rehabilitation" :
+                                                                patients[selectedPatient].status === "Limited training" ? "badge-limited-training" :
+                                                                patients[selectedPatient].status === "Post surgery" ? "badge-post-surgery" : ""
                                                             }`}
                                                         >
                                                             {patients[selectedPatient].status}
@@ -271,8 +298,8 @@ export default function PatientsPage() {
                                                         <span className="ml-2 font-medium">{patients[selectedPatient].patientId}</span>
                                                     </div>
                                                     <div>
-                                                        <span className="text-muted-foreground">Weight:</span>
-                                                        <span className="ml-2 font-medium">{patients[selectedPatient].weight} kg</span>
+                                                        <span className="text-muted-foreground">BMC:</span>
+                                                        <span className="ml-2 font-medium">{patients[selectedPatient].bmc}g</span>
                                                     </div>
                                                 </div>
                                             </div>
