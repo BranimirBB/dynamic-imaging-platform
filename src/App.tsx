@@ -8,7 +8,8 @@ import EstablishedConnectionsPage from "./app/connections/page"
 import GlobalCommunityPage from "./app/global-community/page"
 import LearningCommunityPage from "./app/learning/page"
 import UltrasoundKnowledgePage from "./app/learning/ultrasound-knowledge"
-import ProbefixDynamicPage from "./app/learning/probefix-dynamic"
+import ProbefixUpperPage from "./app/learning/probefix-upper"
+import ProbefixLowerPage from "./app/learning/probefix-lower"
 import LearningCommunityInnerPage from "./app/learning/learning-community-page"
 import WorkshopsPage from "./app/learning/workshops"
 
@@ -26,7 +27,8 @@ function App() {
                     <Route path="/global-community" element={<GlobalCommunityPage />} />
                     <Route path="/learning" element={<LearningCommunityPage />} />
                     <Route path="/learning/ultrasound-knowledge" element={<UltrasoundKnowledgePage />} />
-                    <Route path="/learning/probefix-dynamic" element={<ProbefixDynamicPage />} />
+                    <Route path="/learning/probefix-upper" element={<ProbefixUpperPage />} />
+                    <Route path="/learning/probefix-lower" element={<ProbefixLowerPage />} />
                     <Route path="/learning/learning-community" element={<LearningCommunityInnerPage />} />
                     <Route path="/learning/workshops" element={<WorkshopsPage />} />
                 </Route>

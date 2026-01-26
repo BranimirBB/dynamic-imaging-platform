@@ -1,5 +1,5 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { IconCheck, IconMessageCircle, IconUserPlus, IconPhotoScan, IconUsers, IconAlertCircle, IconFileText } from "@tabler/icons-react"
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
+import { IconCheck, IconMessageCircle, IconUserPlus, IconPhotoScan, IconUsers, IconAlertCircle, IconFileText, IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
@@ -83,90 +83,97 @@ export default function MailboxPage() {
                     opacity: 0.4 !important;
                 }
             `}</style>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
-                {/* Left column - Notifications (2/3 width) */}
-                <div className="lg:col-span-2">
-                    <Card className="notifications-card-outline">
-                        <CardHeader>
-                            <CardTitle>Notifications</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-0">
-                            {notifications.map((notification, index) => {
-                                const Icon = notification.icon
-                                return (
-                                    <div key={index}>
-                                        <div className="flex items-start gap-4 py-4 cursor-pointer hover:bg-accent/50 transition-colors rounded-lg px-3 -mx-3">
-                                            <Avatar className="h-10 w-10 flex-shrink-0">
-                                                <AvatarImage src={notification.avatar} alt={notification.sender} />
-                                                <AvatarFallback>{notification.sender.charAt(0)}</AvatarFallback>
-                                            </Avatar>
-                                            <div className="flex-1 space-y-1 min-w-0">
-                                                <div className="flex items-center gap-2">
-                                                    <Icon className={`w-4 h-4 flex-shrink-0 ${notification.iconColor}`} />
-                                                    <p className="text-sm font-semibold leading-none">
-                                                        {notification.message}
-                                                    </p>
-                                                </div>
-                                                <p className="text-sm text-muted-foreground leading-snug">
-                                                    {notification.description}
-                                                </p>
-                                                <div className="flex items-center gap-2 text-xs text-muted-foreground pt-1">
-                                                    <span className="font-medium">{notification.sender}</span>
-                                                    <span>•</span>
-                                                    <span>{notification.time}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {index < notifications.length - 1 && <Separator className="notification-separator" />}
-                                    </div>
-                                )
-                            })}
-                        </CardContent>
-                    </Card>
-                </div>
+            
+            {/* Top row - 3 cards in a line */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                {/* Pending requests card */}
+                <Card className="@container/card border border-[0.9px] border-[#61C3C0] shadow-[0_1px_4px_0_#61C3C066] bg-[#F0FCFB]">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-base">Pending requests</CardTitle>
+                        <Button variant="outline" size="sm" className="border-[#61C3C0] hover:bg-[#61C3C0] hover:text-white">
+                            Open
+                        </Button>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground">2 pending requests</p>
+                    </CardContent>
+                </Card>
 
-                {/* Right column - 3 cards stacked (1/3 width) */}
-                <div className="lg:col-span-1 flex flex-col gap-4">
-                    {/* Pending requests card */}
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-base">Pending requests</CardTitle>
-                            <Button variant="outline" size="sm">
-                                Open
-                            </Button>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-sm text-muted-foreground">2 pending requests</p>
-                        </CardContent>
-                    </Card>
+                {/* Groups card */}
+                <Card className="@container/card border border-[0.9px] border-[#61C3C0] shadow-[0_1px_4px_0_#61C3C066] bg-[#F0FCFB]">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-base">Groups</CardTitle>
+                        <Button variant="outline" size="sm" className="border-[#61C3C0] hover:bg-[#61C3C0] hover:text-white">
+                            Edit
+                        </Button>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground">5 group participations</p>
+                    </CardContent>
+                </Card>
 
-                    {/* Groups card */}
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-base">Groups</CardTitle>
-                            <Button variant="outline" size="sm">
-                                Edit
-                            </Button>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-sm text-muted-foreground">5 group participations</p>
-                        </CardContent>
-                    </Card>
-
-                    {/* Established connections card */}
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-base">Established connections</CardTitle>
-                            <Button variant="outline" size="sm">
-                                View
-                            </Button>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-sm text-muted-foreground">4 established connections</p>
-                        </CardContent>
-                    </Card>
-                </div>
+                {/* Established connections card */}
+                <Card className="@container/card border border-[0.9px] border-[#61C3C0] shadow-[0_1px_4px_0_#61C3C066] bg-[#F0FCFB]">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-base">Established connections</CardTitle>
+                        <Button variant="outline" size="sm" className="border-[#61C3C0] hover:bg-[#61C3C0] hover:text-white">
+                            View
+                        </Button>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground">4 established connections</p>
+                    </CardContent>
+                </Card>
             </div>
+
+            {/* Bottom row - Full width Notifications card */}
+            <Card className="notifications-card-outline">
+                <CardHeader>
+                    <CardTitle>Notifications</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-0">
+                    {notifications.map((notification, index) => {
+                        const Icon = notification.icon
+                        return (
+                            <div key={index}>
+                                <div className="flex items-start gap-4 py-4 cursor-pointer hover:bg-accent/50 transition-colors rounded-lg px-3 -mx-3">
+                                    <Avatar className="h-10 w-10 flex-shrink-0">
+                                        <AvatarImage src={notification.avatar} alt={notification.sender} />
+                                        <AvatarFallback>{notification.sender.charAt(0)}</AvatarFallback>
+                                    </Avatar>
+                                    <div className="flex-1 space-y-1 min-w-0">
+                                        <div className="flex items-center gap-2">
+                                            <Icon className={`w-4 h-4 flex-shrink-0 ${notification.iconColor}`} />
+                                            <p className="text-sm font-semibold leading-none">
+                                                {notification.message}
+                                            </p>
+                                        </div>
+                                        <p className="text-sm text-muted-foreground leading-snug">
+                                            {notification.description}
+                                        </p>
+                                        <div className="flex items-center gap-2 text-xs text-muted-foreground pt-1">
+                                            <span className="font-medium">{notification.sender}</span>
+                                            <span>•</span>
+                                            <span>{notification.time}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {index < notifications.length - 1 && <Separator className="notification-separator" />}
+                            </div>
+                        )
+                    })}
+                </CardContent>
+                {/* Pagination footer */}
+                <CardFooter className="flex items-center justify-center gap-4 pt-4 border-t">
+                    <Button variant="outline" size="icon" className="h-8 w-8 border-[#6188C3] hover:bg-[#6188C3] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-current" disabled>
+                        <IconChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <span className="text-sm text-muted-foreground">Page 1 of 10</span>
+                    <Button variant="outline" size="icon" className="h-8 w-8 border-[#6188C3] hover:bg-[#6188C3] hover:text-white">
+                        <IconChevronRight className="h-4 w-4" />
+                    </Button>
+                </CardFooter>
+            </Card>
         </div>
     )
 }

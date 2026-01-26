@@ -6,7 +6,6 @@ import {
     IconFileAi,
     IconFileDescription,
     IconHelp,
-    IconSettings,
 } from "@tabler/icons-react"
 
 import platformLogo from "@/assets/icons/LogoForThePlatform.svg"
@@ -66,7 +65,7 @@ const data = {
         },
         {
             title: "Learning",
-            url: "/learning/ultrasound-knowledge",
+            url: "/learning",
             icon: learningLogo,
         },
     ],
@@ -122,11 +121,6 @@ const data = {
     ],
     // Secondary navigation items (usually settings, help, etc.)
     navSecondary: [
-        {
-            title: "Settings",
-            url: "#",
-            icon: IconSettings,
-        },
         {
             title: "Get Help",
             url: "#",

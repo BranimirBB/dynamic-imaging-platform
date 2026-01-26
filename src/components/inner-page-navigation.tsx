@@ -2,8 +2,9 @@ import { useLocation, Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 
 const navItems = [
+  { label: "ProbeFix - Upper Body", href: "/learning/probefix-upper", isPremium: false },
+  { label: "ProbeFix - Lower Body", href: "/learning/probefix-lower", isPremium: false },
   { label: "Ultrasound knowledge", href: "/learning/ultrasound-knowledge", isPremium: false },
-  { label: "ProbeFix Dynamic", href: "/learning/probefix-dynamic", isPremium: false },
   { label: "Learning Community", href: "/learning/learning-community", isPremium: true },
   { label: "Workshops", href: "/learning/workshops", isPremium: true },
 ];
