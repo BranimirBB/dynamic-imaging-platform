@@ -2,7 +2,6 @@
 
 A modern web application for ultrasound imaging management, patient rehabilitation tracking, and ProbeFix Dynamic integration. Built for healthcare professionals and sports medicine practitioners.
 
-![Platform Version](https://img.shields.io/badge/version-0.0.0-blue)
 ![React](https://img.shields.io/badge/React-18.3-61dafb)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6)
 ![Vite](https://img.shields.io/badge/Vite-5.4-646cff)
@@ -20,7 +19,7 @@ The Dynamic Imaging Platform is designed to streamline ultrasound-based patient 
 - Quick access to recent patient evaluations
 
 ### 👥 Patient Management
-- Multi-group patient organization (e.g., Helmond Rehabilitation, PSV Eindhoven)
+- Multi-group patient organization (e.g., Helmond Rehabilitation Clinic, PSV Eindhoven)
 - Comprehensive patient profiles with:
   - Status badges (Ready for training, Post surgery, Limited training, etc.)
   - Current injury tracking

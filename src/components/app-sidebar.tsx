@@ -65,7 +65,7 @@ const data = {
         },
         {
             title: "Learning",
-            url: "/learning",
+            url: "/learning/probefix-upper",
             icon: learningLogo,
         },
     ],

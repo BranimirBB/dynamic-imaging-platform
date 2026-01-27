@@ -42,7 +42,10 @@ export function NavMain({
             <SidebarMenu>
                 {items.map((item) => {
                     // Check if the current URL matches the item's URL to set active state
-                    const isActive = location.pathname.startsWith(item.url)
+                    // Special handling for Learning section to match all /learning/* routes
+                    const isActive = item.url.startsWith("/learning") 
+                        ? location.pathname.startsWith("/learning")
+                        : location.pathname.startsWith(item.url)
 
                     if (!item.items || item.items.length === 0) {
                         return (
